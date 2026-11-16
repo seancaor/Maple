@@ -1,0 +1,320 @@
+{
+ "facts": [
+  {
+   "c": "Química",
+   "t": "El helio se descubrió en el Sol antes que en la Tierra: en 1868, al analizar la luz solar durante un eclipse. Su nombre viene de Helios, el Sol."
+  },
+  {
+   "c": "Química",
+   "t": "El galio se funde a unos 29.8 °C: puede derretirse en la palma de la mano."
+  },
+  {
+   "c": "Química",
+   "t": "El agua líquida es más densa alrededor de los 4 °C. Por eso el hielo flota y los lagos se congelan de arriba hacia abajo."
+  },
+  {
+   "c": "Química",
+   "t": "El diamante y el grafito de tu lápiz son el mismo elemento: carbono puro, ordenado de forma distinta."
+  },
+  {
+   "c": "Química",
+   "t": "El wolframio (tungsteno) tiene el punto de fusión más alto de todos los metales: unos 3422 °C. Lo aislaron los hermanos Elhuyar, españoles, en 1783."
+  },
+  {
+   "c": "Química",
+   "t": "A 25 °C solo dos elementos son líquidos: el mercurio y el bromo."
+  },
+  {
+   "c": "Química",
+   "t": "El oxígeno líquido es de color azul pálido y un imán lo atrae, porque es paramagnético."
+  },
+  {
+   "c": "Química",
+   "t": "El fósforo se descubrió en 1669, cuando Hennig Brand hervía orina buscando la piedra filosofal."
+  },
+  {
+   "c": "Química",
+   "t": "Mendeléyev dejó huecos en su tabla de 1869 para elementos que aún no se conocían, y predijo sus propiedades. Luego se descubrieron el galio y el germanio."
+  },
+  {
+   "c": "Química",
+   "t": "La sal de mesa se forma de un metal que reacciona con violencia con el agua (sodio) y un gas tóxico (cloro)."
+  },
+  {
+   "c": "Química",
+   "t": "El hielo seco es CO₂ sólido: a presión normal no se derrite, sublima a −78.5 °C."
+  },
+  {
+   "c": "Química",
+   "t": "El acero inoxidable lleva al menos un 10.5 % de cromo, que forma una capa de óxido protectora."
+  },
+  {
+   "c": "Química",
+   "t": "En el siglo XIX el aluminio era tan caro que la punta del Monumento a Washington (1884) se hizo de aluminio."
+  },
+  {
+   "c": "Química",
+   "t": "El yodo sólido sublima en un vapor violeta; su nombre viene del griego iodes, ‘violeta’."
+  },
+  {
+   "c": "Química",
+   "t": "El cloro debe su nombre al griego chloros, ‘verde amarillento’, el color de ese gas."
+  },
+  {
+   "c": "Química",
+   "t": "La palabra ‘gas’ la inventó el químico Jan Baptista van Helmont en el siglo XVII, inspirado en la palabra ‘caos’."
+  },
+  {
+   "c": "Química",
+   "t": "Una gota de agua (unos 0.05 mL) tiene cerca de 1.7 × 10²¹ moléculas."
+  },
+  {
+   "c": "Química",
+   "t": "Un mol de agua pesa unos 18 g: cabe en poco más de una cucharada."
+  },
+  {
+   "c": "Química",
+   "t": "El papel tornasol se fabrica con tintes extraídos de líquenes."
+  },
+  {
+   "c": "Química",
+   "t": "El ozono nos protege de la radiación ultravioleta en la estratosfera, pero al nivel del suelo es un contaminante."
+  },
+  {
+   "c": "Química",
+   "t": "La cafeína (C₈H₁₀N₄O₂) bloquea los receptores de adenosina, la molécula que se acumula y nos da sensación de sueño."
+  },
+  {
+   "c": "Química",
+   "t": "El olor a tierra mojada se debe en parte a la geosmina, una molécula que producen bacterias del suelo. Ese olor se llama petricor."
+  },
+  {
+   "c": "Química",
+   "t": "El Kevlar, la fibra de los chalecos antibalas, lo inventó la química Stephanie Kwolek en 1965."
+  },
+  {
+   "c": "Química",
+   "t": "Marie Curie es la única persona con premios Nobel en dos ciencias distintas: Física (1903) y Química (1911)."
+  },
+  {
+   "c": "Química",
+   "t": "El ácido del estómago es principalmente ácido clorhídrico, con un pH de entre 1.5 y 3.5."
+  },
+  {
+   "c": "Química",
+   "t": "La sangre humana mantiene su pH entre 7.35 y 7.45 gracias a sistemas amortiguadores, como el del bicarbonato."
+  },
+  {
+   "c": "Ciencia",
+   "t": "El hidrógeno es el elemento más abundante del universo: cerca de tres cuartas partes de la materia normal."
+  },
+  {
+   "c": "Ciencia",
+   "t": "El oxígeno es el elemento más abundante de la corteza terrestre, seguido del silicio."
+  },
+  {
+   "c": "Ciencia",
+   "t": "El aire que respiras es cerca de 78 % nitrógeno y 21 % oxígeno."
+  },
+  {
+   "c": "Ciencia",
+   "t": "El carbono-14 permite fechar restos orgánicos de hasta unos 50 000 años."
+  },
+  {
+   "c": "Ciencia",
+   "t": "Un rayo puede calentar el aire a unos 30 000 °C, varias veces más que la superficie del Sol."
+  },
+  {
+   "c": "Ciencia",
+   "t": "La penicilina se descubrió por accidente en 1928: Alexander Fleming notó que un moho impedía crecer a las bacterias de una placa."
+  },
+  {
+   "c": "Colombia",
+   "t": "El platino se describió para la ciencia europea a partir de muestras del Chocó. Lo llamaron ‘platina’, ‘platita’, por parecerse a la plata."
+  },
+  {
+   "c": "Colombia",
+   "t": "Las esmeraldas son berilo, un silicato de berilio y aluminio. Su verde se debe a pequeñas cantidades de cromo y vanadio. Colombia es famosa por las suyas."
+  },
+  {
+   "c": "Colombia",
+   "t": "El café que tanto se cultiva en el Eje Cafetero desarrolla cientos de compuestos aromáticos durante el tostado."
+  },
+  {
+   "c": "Estudiar",
+   "t": "Intentar recordar sin mirar (autoevaluarte) fija más que releer. A esto se le llama efecto de testeo."
+  },
+  {
+   "c": "Estudiar",
+   "t": "Repartir el estudio en varios días rinde más que una maratón la noche anterior. Es la práctica espaciada."
+  },
+  {
+   "c": "Estudiar",
+   "t": "Mientras duermes, el cerebro repasa y consolida lo que aprendiste durante el día."
+  },
+  {
+   "c": "Estudiar",
+   "t": "Explicarle un tema a otra persona (o a Maple) te obliga a ordenar ideas y muestra lo que aún no entiendes."
+  },
+  {
+   "c": "Estudiar",
+   "t": "Mezclar tipos de ejercicios en una misma sesión ayuda a aprender cuándo usar cada método. Es la práctica intercalada."
+  }
+ ],
+ "quiz": [
+  {
+   "q": "¿Qué elemento se descubrió primero en el Sol?",
+   "o": [
+    "Helio",
+    "Hidrógeno",
+    "Neón",
+    "Argón"
+   ],
+   "a": 0,
+   "e": "Se identificó en 1868 en la luz solar; en la Tierra se encontró después."
+  },
+  {
+   "q": "¿Cuántos elementos son líquidos a 25 °C?",
+   "o": [
+    "2",
+    "1",
+    "4",
+    "Ninguno"
+   ],
+   "a": 0,
+   "e": "El mercurio y el bromo."
+  },
+  {
+   "q": "¿Cuál es el gas más abundante del aire?",
+   "o": [
+    "Nitrógeno",
+    "Oxígeno",
+    "Argón",
+    "CO₂"
+   ],
+   "a": 0,
+   "e": "Cerca del 78 %."
+  },
+  {
+   "q": "El hielo seco es…",
+   "o": [
+    "CO₂ sólido",
+    "Agua muy fría",
+    "Nitrógeno sólido",
+    "Amoniaco"
+   ],
+   "a": 0,
+   "e": "Sublima a −78.5 °C."
+  },
+  {
+   "q": "¿Qué metal tiene el punto de fusión más alto?",
+   "o": [
+    "Wolframio",
+    "Hierro",
+    "Platino",
+    "Oro"
+   ],
+   "a": 0,
+   "e": "Unos 3422 °C."
+  },
+  {
+   "q": "El diamante está hecho de…",
+   "o": [
+    "Carbono",
+    "Silicio",
+    "Cuarzo",
+    "Boro"
+   ],
+   "a": 0,
+   "e": "Lo mismo que el grafito, con otra estructura."
+  },
+  {
+   "q": "¿Cuál es el pH normal de la sangre?",
+   "o": [
+    "7.35–7.45",
+    "6.0–6.5",
+    "8.0–8.5",
+    "5.5"
+   ],
+   "a": 0,
+   "e": "Los amortiguadores la mantienen en ese rango."
+  },
+  {
+   "q": "¿Quién ganó Nobel en Física y en Química?",
+   "o": [
+    "Marie Curie",
+    "Albert Einstein",
+    "Linus Pauling",
+    "Niels Bohr"
+   ],
+   "a": 0,
+   "e": "En 1903 y 1911."
+  },
+  {
+   "q": "¿Qué técnica de estudio fija mejor lo aprendido?",
+   "o": [
+    "Autoevaluarse",
+    "Releer",
+    "Subrayar",
+    "Pasar a limpio"
+   ],
+   "a": 0,
+   "e": "Recordar sin mirar es más efectivo que releer."
+  },
+  {
+   "q": "¿De qué color es el oxígeno líquido?",
+   "o": [
+    "Azul pálido",
+    "Incoloro",
+    "Rojo",
+    "Verde"
+   ],
+   "a": 0,
+   "e": "Y además lo atrae un imán."
+  },
+  {
+   "q": "¿Cuántos gramos pesa un mol de agua?",
+   "o": [
+    "≈ 18 g",
+    "≈ 1 g",
+    "≈ 6 g",
+    "≈ 100 g"
+   ],
+   "a": 0,
+   "e": "2(1.008) + 15.999 ≈ 18.02 g/mol."
+  },
+  {
+   "q": "El platino se describió a partir de muestras de…",
+   "o": [
+    "el Chocó",
+    "los Andes de Chile",
+    "los Urales",
+    "Sudáfrica"
+   ],
+   "a": 0,
+   "e": "Lo llamaron ‘platina’."
+  },
+  {
+   "q": "¿Qué elemento es el más abundante del universo?",
+   "o": [
+    "Hidrógeno",
+    "Helio",
+    "Oxígeno",
+    "Carbono"
+   ],
+   "a": 0,
+   "e": "Cerca de tres cuartas partes de la materia normal."
+  },
+  {
+   "q": "La mayor densidad del agua líquida ocurre cerca de…",
+   "o": [
+    "4 °C",
+    "0 °C",
+    "100 °C",
+    "−4 °C"
+   ],
+   "a": 0,
+   "e": "Por eso el hielo flota."
+  }
+ ]
+}

@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maple · Estudio en calma</title>
+<style>
+@font-face{font-family:Fredoka;src:url(fonts/Fredoka.ttf) format("truetype");font-weight:300 700;font-display:swap}
+@font-face{font-family:Nunito;src:url(fonts/Nunito.ttf) format("truetype");font-weight:200 1000;font-display:swap}
+:root{
+  --bg:#F5F4F0; --tile:#FFFFFF; --soft:#F1EEE8; --ink:#2E2A28; --ink2:#9A938C; --line:#ECE9E3;
+  --red:#FF5B4D; --redD:#E0463A; --blue:#46A7F5; --blueD:#2F8AD6; --mint:#2FC79B; --mintD:#1FA67F;
+  --yel:#FFC53D; --yelD:#E3A41F; --lil:#9C8CF2; --lilD:#7E6DDB; --pink:#FF8FB1; --pinkD:#E86F94;
+  --sh:0 1px 0 rgba(46,42,40,.04), 0 10px 28px rgba(46,42,40,.07);
+  --acc:var(--red); --accD:var(--redD);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:700}
+body{min-height:100vh;padding-bottom:calc(100px + env(safe-area-inset-bottom));background-image:radial-gradient(rgba(46,42,40,.055) 1.2px, transparent 1.3px);background-size:22px 22px}
+h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;font-weight:600;margin:0;letter-spacing:.2px}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+input,textarea{font:inherit;color:inherit}
+a{color:inherit}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:480px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 20px 20px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;height:44px}
+.brand{font-family:Fredoka;font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px}
+.brand i{width:10px;height:10px;border-radius:50%;background:var(--acc);display:inline-block;transition:background .3s}
+.rbtn{width:44px;height:44px;border-radius:50%;background:var(--tile);box-shadow:var(--sh);display:grid;place-items:center;font-size:20px;color:var(--ink2);transition:transform .12s;flex:none}
+.rbtn:active{transform:scale(.9)}
+.view{display:none}.view.on{display:block;animation:in .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes in{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.step{display:none}.step.on{display:block;animation:in .3s cubic-bezier(.2,.9,.3,1.2)}
+.tile{background:var(--tile);border-radius:28px;box-shadow:var(--sh);padding:18px}
+.gap{height:14px}.gap2{height:24px}
+.label{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink2);font-weight:800;margin:0 0 10px 4px}
+.title{font-size:28px;line-height:1.1;margin:6px 4px 16px}
+.sub{color:var(--ink2);font-size:15px;line-height:1.45;font-weight:700}
+.center{text-align:center}.hide{display:none!important}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:58px;border-radius:999px;background:var(--acc);color:#fff;font-family:Fredoka;font-weight:600;font-size:19px;box-shadow:0 5px 0 var(--accD);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accD)}
+.btn .i{font-size:22px}
+.btn.sm{height:46px;font-size:16px;width:auto;padding:0 20px;box-shadow:0 4px 0 var(--accD)}
+.btn.soft{background:var(--tile);color:var(--ink);box-shadow:0 5px 0 var(--line), inset 0 0 0 2px var(--line)}
+.btn.soft:active{box-shadow:0 1px 0 var(--line), inset 0 0 0 2px var(--line)}
+.link{display:block;margin:14px auto 0;color:var(--ink2);font-size:15px;font-weight:800;padding:8px}
+
+/* ---------- Maple ---------- */
+.hero{position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;margin-top:4px}
+.plat{position:absolute;bottom:14px;left:50%;width:150px;height:26px;margin-left:-75px;border-radius:50%;background:rgba(46,42,40,.07);transition:transform .2s}
+.mw{position:relative;display:flex;justify-content:center;align-items:flex-end;transform-origin:50% 100%}
+.mw img{display:block;height:178px;transform-origin:50% 100%;cursor:pointer}
+.hero .mw{bottom:auto;margin-bottom:22px}
+.alive{animation:breathe 3.4s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(.992,1.014)}}
+.a-hop{animation:hop .62s cubic-bezier(.3,.7,.4,1)}
+@keyframes hop{0%{transform:none}14%{transform:scale(1.1,.88)}46%{transform:translateY(-44px) scale(.94,1.07)}76%{transform:translateY(0) scale(1.08,.9)}90%{transform:scale(.98,1.02)}100%{transform:none}}
+.a-cele{animation:cele 1.3s cubic-bezier(.3,.7,.4,1)}
+@keyframes cele{0%{transform:none}8%{transform:scale(1.1,.88)}25%{transform:translateY(-56px) scale(.94,1.08) rotate(-4deg)}42%{transform:translateY(0) scale(1.08,.9)}50%{transform:scale(1.1,.88)}67%{transform:translateY(-56px) scale(.94,1.08) rotate(4deg)}84%{transform:translateY(0) scale(1.08,.9)}100%{transform:none}}
+.a-rock{animation:rock .9s ease-in-out}
+@keyframes rock{0%,100%{transform:none}20%{transform:rotate(-5deg)}45%{transform:rotate(4deg)}70%{transform:rotate(-3deg)}}
+.a-talk{animation:talk .45s ease-out}
+@keyframes talk{30%{transform:translateY(-7px) scale(.98,1.03)}65%{transform:scale(1.03,.97)}}
+.a-shake{animation:shake .45s ease-in-out}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.walker{animation:walkx 6s linear infinite}
+@keyframes walkx{0%{transform:translateX(-70px)}50%{transform:translateX(70px)}100%{transform:translateX(-70px)}}
+.zz{position:absolute;top:10%;right:18%;pointer-events:none}
+.zz span{position:absolute;font-family:Fredoka;font-weight:700;color:var(--lil);opacity:0;animation:zz 3s ease-in infinite}
+.zz span:nth-child(2){animation-delay:1s;font-size:22px}.zz span:nth-child(3){animation-delay:2s;font-size:28px}
+@keyframes zz{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(30px,-70px)}}
+.dots3{position:absolute;top:2%;right:20%;background:var(--tile);border-radius:16px;padding:8px 12px;box-shadow:var(--sh);display:flex;gap:5px}
+.dots3 i{width:8px;height:8px;border-radius:50%;background:var(--ink2);animation:dd 1.2s infinite}
+.dots3 i:nth-child(2){animation-delay:.2s}.dots3 i:nth-child(3){animation-delay:.4s}
+@keyframes dd{30%{transform:translateY(-5px);background:var(--ink)}}
+.say{position:relative;z-index:2;margin-bottom:8px;max-width:92%;background:var(--tile);box-shadow:var(--sh);border-radius:20px;padding:10px 16px;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:bob 3s ease-in-out infinite}
+.say:after{content:"";position:absolute;bottom:-7px;left:50%;margin-left:-8px;border:8px solid transparent;border-top-color:var(--tile);border-bottom:0}
+@keyframes bob{50%{transform:translateY(-3px)}}
+
+/* ---------- Hoy ---------- */
+.energy{display:flex;justify-content:space-between;gap:8px}
+.energy button{flex:1;aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--soft);opacity:.5;transition:transform .2s cubic-bezier(.2,.9,.3,1.4),opacity .2s;outline:3px solid transparent;outline-offset:2px}
+.energy button img{width:100%;height:100%;object-fit:cover;display:block}
+.energy button.on{opacity:1;transform:scale(1.12);outline-color:var(--acc)}
+.seg{display:flex;background:var(--soft);border-radius:999px;padding:5px}
+.seg button{flex:1;height:42px;border-radius:999px;font-family:Fredoka;font-weight:600;font-size:16px;color:var(--ink2);transition:.2s}
+.seg button small{font-family:Nunito;font-size:11px;display:block;margin-top:-4px;font-weight:800}
+.seg button.on{background:var(--tile);color:var(--ink);box-shadow:0 2px 8px rgba(46,42,40,.12)}
+.seg.tall button{height:46px;font-size:18px}
+.apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.app{position:relative;background:var(--tile);border-radius:28px;box-shadow:var(--sh);padding:16px;text-align:left;height:124px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .12s}
+.app:active{transform:scale(.95)}
+.app .ic{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-size:24px}
+.app b{font-family:Fredoka;font-weight:600;font-size:18px;display:block}
+.app small{color:var(--ink2);font-size:13px;font-weight:800}
+.badge{position:absolute;top:12px;right:12px;min-width:26px;height:26px;border-radius:13px;padding:0 8px;background:var(--red);color:#fff;font-family:Fredoka;font-weight:600;font-size:14px;display:grid;place-items:center}
+.today{display:flex;align-items:center;gap:6px}
+.today .n{flex:1;text-align:center}
+.today .n b{display:block;font-family:Fredoka;font-weight:600;font-size:28px;line-height:1}
+.today .n span{font-size:12px;color:var(--ink2);font-weight:800}
+.today .sep{width:2px;height:34px;background:var(--line);border-radius:2px}
+.week{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:0 6px}
+.week div{display:flex;flex-direction:column;align-items:center;gap:6px;width:24px}
+.week i{display:block;border-radius:50%;background:var(--line)}
+.week span{font-size:11px;color:var(--ink2);font-weight:800}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:2px solid var(--line);font-size:16px}
+.list li:last-child{border:0}
+.ck{width:28px;height:28px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:#fff;font-size:16px;flex:none;transition:.2s}
+.ck.on{background:var(--mint)}
+.list li.done .t{color:var(--ink2);text-decoration:line-through}
+.list .t{flex:1;min-width:0}
+.list .t small{display:block;color:var(--ink2);font-size:12px;font-weight:800}
+.list .x{color:#CFC8C0;font-size:18px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--soft);font-size:13px;font-weight:800;color:#6E6760}
+.ctx{display:flex;align-items:center;gap:14px;width:100%;text-align:left}
+.ctx .ic{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;color:#fff;font-size:26px;flex:none}
+.ctx b{display:block;font-family:Fredoka;font-weight:600;font-size:18px}
+.ctx small{color:var(--ink2);font-size:13px;font-weight:800}
+
+/* ---------- Enfocar ---------- */
+.field{width:100%;border:0;background:var(--soft);border-radius:20px;padding:16px 18px;font-size:17px;font-weight:800;outline:none;transition:box-shadow .2s}
+.field:focus{box-shadow:0 0 0 3px var(--acc)}
+.field::placeholder{color:#BDB6AE}
+textarea.field{min-height:150px;resize:none;font-size:16px;line-height:1.5;font-weight:700}
+input[type=date].field{font-family:Nunito}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips.wrapc{flex-wrap:wrap;overflow:visible}
+.chip{flex:none;padding:9px 14px;border-radius:999px;background:var(--soft);font-size:14px;font-weight:800;color:#6E6760;white-space:nowrap}
+.chip.on{background:var(--acc);color:#fff}
+.toggles{display:flex;gap:10px}
+.tog{flex:1;border-radius:22px;background:var(--soft);padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--ink2);transition:.2s;text-align:center}
+.tog .i{font-size:24px}
+.tog.on{background:var(--acc);color:#fff}
+.ifthen{display:flex;align-items:center;gap:10px;width:100%;background:var(--soft);border-radius:20px;padding:12px 16px;text-align:left;font-size:14px;color:#6E6760}
+.ifthen b{color:var(--ink)}
+.ifthen .i{font-size:20px;color:var(--ink2)}
+.stage{position:relative;width:min(300px,78vw);height:min(300px,78vw);margin:8px auto 0;display:grid;place-items:center}
+.stage svg.ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.stage .mw{position:relative;top:-8%}
+.stage .mw img{height:auto;width:min(112px,29vw)}
+.stage .time{position:absolute;bottom:14%;font-family:Fredoka;font-weight:600;font-size:46px;font-variant-numeric:tabular-nums}
+.task{text-align:center;font-family:Fredoka;font-size:20px;font-weight:600;margin:4px 10px 0;min-height:26px}
+.tasksub{text-align:center;color:var(--ink2);font-size:13px;font-weight:800;margin-top:4px}
+.round-row{display:flex;justify-content:center;gap:26px;margin-top:22px}
+.rb{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--ink2)}
+.rb .c{width:64px;height:64px;border-radius:50%;background:var(--tile);box-shadow:var(--sh);display:grid;place-items:center;font-size:26px;color:var(--ink);transition:transform .1s;position:relative}
+.rb .c:active{transform:scale(.9)}
+.rb.big .c{width:80px;height:80px;background:var(--yel);color:#5A4410;box-shadow:0 5px 0 var(--yelD);font-size:32px}
+.rb .c .badge{top:-4px;right:-4px}
+.portrait{width:120px;height:120px;border-radius:50%;overflow:hidden;margin:6px auto 10px;background:var(--soft);box-shadow:var(--sh);animation:pop .5s cubic-bezier(.2,.9,.3,1.5)}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.portrait.sm{width:84px;height:84px}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.dots{display:flex;justify-content:center;gap:12px}
+.dots button{width:44px;height:44px;border-radius:50%;background:var(--soft);font-family:Fredoka;font-weight:600;font-size:18px;color:var(--ink2);transition:.2s cubic-bezier(.2,.9,.3,1.4)}
+.dots button.on{background:var(--yel);color:#5A4410;transform:scale(1.15)}
+.acts{display:flex;justify-content:space-between;gap:6px}
+.acts button{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--ink2)}
+.acts .c{width:56px;height:56px;border-radius:18px;background:var(--soft);display:grid;place-items:center;font-size:26px;color:var(--ink2);transition:.2s cubic-bezier(.2,.9,.3,1.4)}
+.acts button.on{color:var(--ink)}
+.acts button.on .c{background:var(--mint);color:#fff;transform:scale(1.08)}
+.breath{position:relative;width:min(270px,72vw);height:min(270px,72vw);margin:10px auto 0;display:grid;place-items:center}
+.breath .orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 32%,#C9F3E5,var(--mint));transform:scale(.55);transition:transform 2s ease-in-out}
+.breath .orb2{position:absolute;inset:-14px;border-radius:50%;border:3px dashed rgba(47,199,155,.25)}
+.breath .mw{position:absolute;left:0;right:0;bottom:11%;display:flex;justify-content:center}
+.breath .mw img{height:auto;width:min(106px,29vw);transform-origin:50% 100%}
+.btxt{text-align:center;font-family:Fredoka;font-size:24px;font-weight:600;min-height:32px;margin-top:16px}
+.bigtime{text-align:center;font-family:Fredoka;font-weight:600;font-size:40px;font-variant-numeric:tabular-nums;margin-top:6px}
+
+/* ---------- Repasar ---------- */
+.revhead{display:flex;align-items:flex-end;gap:12px}
+.revhead b{font-family:Fredoka;font-weight:600;font-size:64px;line-height:.9;color:var(--blue)}
+.boxes{display:flex;align-items:flex-end;gap:8px;height:48px;margin-top:18px}
+.boxes div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:800;color:var(--ink2)}
+.boxes i{display:block;width:100%;border-radius:8px;background:#D7ECFD;min-height:6px}
+.boxes div:last-child i{background:var(--blue)}
+.flip{perspective:1200px;height:290px;margin-top:6px}
+.flip .inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,1.2,.4,1);transform-style:preserve-3d}
+.flip.on .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--tile);border-radius:32px;box-shadow:var(--sh);padding:26px 22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
+.face.back{transform:rotateY(180deg);background:#EAF5FE}
+.face .tag{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ink2);font-weight:800;white-space:nowrap}
+.face .q{font-family:Fredoka;font-weight:600;font-size:22px;line-height:1.25}
+.face .a{font-size:17px;line-height:1.45;font-weight:700}
+.progress{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--blue);border-radius:8px;transition:width .4s}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rate button{height:74px;border-radius:24px;background:var(--tile);box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:800;transition:transform .1s}
+.rate button:active{transform:scale(.93)}
+.rate .i{font-size:24px}
+.qlabel{text-align:center;font-size:13px;font-weight:800;color:var(--ink2);margin-bottom:10px}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.calib{display:flex;gap:10px}
+.calib div{flex:1;background:var(--soft);border-radius:18px;padding:10px;text-align:center}
+.calib b{display:block;font-family:Fredoka;font-weight:600;font-size:22px}
+.calib span{font-size:11px;color:var(--ink2);font-weight:800}
+
+/* ---------- Calma / hojas ---------- */
+.big-tile{display:flex;align-items:center;gap:16px;width:100%;background:var(--tile);border-radius:26px;box-shadow:var(--sh);padding:14px 16px;text-align:left;transition:transform .12s;margin-bottom:12px}
+.big-tile:active{transform:scale(.97)}
+.big-tile .ic{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;color:#fff;font-size:26px;flex:none}
+.big-tile b{display:block;font-family:Fredoka;font-weight:600;font-size:18px}
+.big-tile small{color:var(--ink2);font-size:13px;font-weight:700;line-height:1.3;display:block}
+.big-tile .go{margin-left:auto;color:#CFC8C0;font-size:22px}
+.foot{color:var(--ink2);font-size:13px;line-height:1.45;text-align:center;margin:18px 10px 0;font-weight:700}
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;background:var(--tile);box-shadow:0 10px 30px rgba(46,42,40,.14);border-radius:999px;padding:7px;display:flex;gap:4px}
+.dock{transition:transform .35s cubic-bezier(.2,.9,.3,1.1)}
+.dock button{height:58px;min-width:76px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#ADA59C;font-size:23px;padding:0 6px;transition:background .25s,color .25s,transform .12s}
+.dock button:active{transform:scale(.92)}
+.dock button span{font-family:Nunito;font-weight:800;font-size:11px;white-space:nowrap}
+.dock button.on{background:var(--c);color:#fff}
+body.immersive .dock{transform:translate(-50%,160%)}
+body.immersive{padding-bottom:30px}
+body.immersive .toast{bottom:calc(24px + env(safe-area-inset-bottom))}
+.sheet-bg.on ~ .toast{bottom:calc(24px + env(safe-area-inset-bottom));z-index:80}
+/* Bienestar */
+.wgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.wtile{position:relative;background:var(--tile);border-radius:24px;box-shadow:var(--sh);padding:14px;text-align:left;display:flex;flex-direction:column;gap:2px;min-height:118px;transition:transform .12s}
+.wtile:active{transform:scale(.95)}
+.wtile .ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#fff;font-size:22px;margin-bottom:auto}
+.wtile b{font-family:Fredoka;font-weight:600;font-size:17px;margin-top:10px}
+.wtile small{color:var(--ink2);font-size:12px;font-weight:800;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feel-cta{background:linear-gradient(135deg,#FFF6DC,#FFFFFF 70%);margin-bottom:18px}
+/* hoja: botón cerrar */
+.sheet{position:relative}
+.sheet-x{position:sticky;top:0;float:right;margin:-6px -6px 6px 10px;width:40px;height:40px;border-radius:50%;background:var(--tile);box-shadow:var(--sh);display:grid;place-items:center;z-index:5;color:var(--ink2);font-size:20px}
+.sheet.drag{transition:none!important}
+.mood-link{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 14px;border-radius:18px;background:var(--soft);font-size:14px;font-weight:800;color:#6E6760;text-align:left}
+.mood-link .i{font-size:20px;color:var(--yelD)}
+.mood-link .go{margin-left:auto;color:#CFC8C0}
+.facelbl{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);font-weight:800;margin-top:6px;padding:0 4px}
+.sheet-bg{position:fixed;inset:0;background:rgba(46,42,40,.3);z-index:50;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.sheet-bg.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:480px;max-height:90vh;overflow:auto;border-radius:32px 32px 0 0;padding:14px 20px calc(26px + env(safe-area-inset-bottom));animation:up .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes up{from{transform:translateY(60px);opacity:.3}}
+.grab{width:42px;height:5px;border-radius:5px;background:#DDD7CF;margin:0 auto 16px}
+.sh-title{font-size:24px;margin-bottom:4px}
+.sci{margin-bottom:12px}
+.sci h3{font-size:17px;margin-bottom:6px}
+.sci p{margin:0 0 8px;font-size:14px;line-height:1.45;color:#5A534D}
+.sci a{color:var(--blueD);font-size:12px;font-weight:800;text-decoration:none}
+.callout{background:#FFF6DC;border-radius:20px;padding:14px 16px;font-size:15px;line-height:1.5;color:#5A4410}
+.callout.mint{background:#E2F7EF;color:#1E5A47}
+.callout.lil{background:#EEEAFE;color:#3D3270}
+.phone{display:flex;align-items:center;gap:12px;background:var(--tile);border-radius:20px;padding:12px 14px;box-shadow:var(--sh);margin-bottom:10px;text-decoration:none}
+.phone .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--mint);color:#fff;font-size:22px;flex:none}
+.phone b{display:block;font-family:Fredoka;font-weight:600;font-size:18px}
+.phone small{color:var(--ink2);font-size:12px;font-weight:800;display:block;line-height:1.3}
+.stepper{display:flex;gap:6px;margin-bottom:14px}
+.stepper i{flex:1;height:6px;border-radius:6px;background:var(--line)}
+.stepper i.on{background:var(--acc)}
+.plan li .when{font-family:Fredoka;font-size:13px;color:var(--ink2);width:48px;flex:none;text-align:center}
+.plan li.today-row .when{color:var(--red)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;font-weight:800;font-size:15px;padding:12px 20px;border-radius:999px;z-index:70;opacity:0;transition:.3s cubic-bezier(.2,.9,.3,1.3);pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;animation:fall 1.6s cubic-bezier(.3,.6,.5,1) forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+
+/* ---------- emociones ---------- */
+.emo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.emo-grid button{background:var(--tile);border-radius:22px;box-shadow:var(--sh);padding:10px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;font-weight:800;transition:transform .12s}
+.emo-grid button:active{transform:scale(.94)}
+.emo-grid img{width:62px;height:62px;border-radius:50%;object-fit:cover;background:var(--soft)}
+.emo-stage{position:relative;height:250px;display:flex;justify-content:center;align-items:flex-end;overflow:hidden;border-radius:28px;background:var(--tile);box-shadow:var(--sh);margin-bottom:14px;transition:background 1.5s}
+.emo-stage .plat{bottom:12px}
+.emo-stage .mw{bottom:18px}
+.emo-stage .mw img{height:205px}
+.emo-glow{position:absolute;left:50%;top:48%;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:radial-gradient(circle,var(--gc,rgba(255,91,77,.35)),transparent 68%);animation:glow 1.4s ease-in-out infinite;transition:opacity 1.5s}
+@keyframes glow{50%{transform:scale(1.12)}}
+.a-angry{animation:angry .42s linear infinite}
+@keyframes angry{0%,100%{transform:none}25%{transform:translateX(-3px) rotate(-1.2deg)}75%{transform:translateX(3px) rotate(1.2deg)}}
+.a-tremble{animation:tremble .16s linear infinite}
+@keyframes tremble{0%,100%{transform:none}50%{transform:translateX(1.5px)}}
+.a-droop{animation:droop 3.4s ease-in-out infinite}
+@keyframes droop{50%{transform:scale(1.015,.965) translateY(2px)}}
+.a-sway{animation:sway 4.5s ease-in-out infinite}
+@keyframes sway{25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+.a-bounce{animation:bounce .9s cubic-bezier(.3,.7,.4,1) infinite}
+@keyframes bounce{0%,100%{transform:none}35%{transform:translateY(-24px) scale(.96,1.05)}70%{transform:scale(1.05,.95)}}
+.fx{position:absolute;inset:0;pointer-events:none}
+.steam i{position:absolute;top:22%;width:18px;height:18px;border-radius:50%;background:#E4DDD5;opacity:0;animation:steam 1.5s ease-out infinite}
+.steam i:nth-child(1){left:36%;--dx:-26px}.steam i:nth-child(2){right:36%;--dx:26px;animation-delay:.5s}.steam i:nth-child(3){left:40%;--dx:-14px;animation-delay:1s}.steam i:nth-child(4){right:40%;--dx:14px;animation-delay:.25s}
+@keyframes steam{0%{opacity:.95;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(var(--dx),-60px) scale(1.7)}}
+.cloud{position:absolute;top:8%;left:50%;width:110px;height:40px;margin-left:-55px;background:#AEB8C4;border-radius:22px;animation:bob2 3s ease-in-out infinite}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#AEB8C4;border-radius:50%}
+.cloud:before{width:46px;height:46px;left:16px;top:-22px}.cloud:after{width:36px;height:36px;right:18px;top:-14px}
+@keyframes bob2{50%{transform:translateY(4px)}}
+.rain i{position:absolute;top:16%;width:4px;height:12px;border-radius:3px;background:var(--blue);opacity:.7;animation:rain .9s linear infinite}
+@keyframes rain{0%{transform:translateY(0);opacity:0}15%{opacity:.8}100%{transform:translateY(120px);opacity:0}}
+.sweat{position:absolute;top:24%;right:37%;width:13px;height:18px;background:#8FD3FF;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;animation:sweat 1.8s ease-in infinite}
+@keyframes sweat{0%{opacity:0;transform:translateY(-4px)}20%{opacity:1}100%{opacity:0;transform:translateY(30px)}}
+.spark i{position:absolute;font-style:normal;font-size:22px;color:var(--yel);opacity:0;animation:spark 1.6s ease-in-out infinite}
+@keyframes spark{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(90deg)}}
+.leaf i{position:absolute;top:-10%;width:12px;height:12px;border-radius:0 70% 0 70%;background:var(--mint);opacity:.7;animation:leaf 6s linear infinite}
+@keyframes leaf{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(40px,300px) rotate(360deg)}}
+.dots5{display:flex;justify-content:space-between;gap:8px}
+.dots5 button{flex:1;height:14px;border-radius:7px;background:var(--soft);transition:.2s}
+.dots5 button.on{background:var(--ec,var(--red))}
+.steps-card{background:var(--tile);border-radius:24px;box-shadow:var(--sh);padding:6px 16px}
+.steps-card li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:2px solid var(--line);font-size:15px;line-height:1.4}
+.steps-card li:last-child{border:0}
+.steps-card li b.n{width:26px;height:26px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-family:Fredoka;font-size:14px;flex:none}
+/* ---------- ciclo ---------- */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal .h{font-size:11px;font-weight:800;color:var(--ink2);text-align:center;padding-bottom:2px}
+.cal button{aspect-ratio:1;border-radius:12px;background:var(--soft);font-family:Fredoka;font-weight:600;font-size:14px;color:#6E6760;position:relative;display:grid;place-items:center}
+.cal button.per{background:var(--red);color:#fff}
+.cal button.per1{background:#FFB1A9;color:#7A2A22}
+.cal button.pred{background:#fff;box-shadow:inset 0 0 0 2px #FFB1A9;color:#C9554A}
+.cal button.today{outline:3px solid var(--ink);outline-offset:1px}
+.cal button.sel{transform:scale(1.12);box-shadow:0 4px 12px rgba(46,42,40,.2)}
+.cal button.fut{opacity:.55}
+.cal button i{position:absolute;bottom:4px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%}
+.cyc-head{display:flex;align-items:center;gap:14px}
+.cyc-ring{width:84px;height:84px;flex:none;position:relative}
+.cyc-ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:Fredoka;font-size:24px;line-height:1;text-align:center}
+.cyc-ring b small{display:block;font-size:10px;font-family:Nunito;font-weight:800;color:var(--ink2)}
+details.acc{background:var(--tile);border-radius:22px;box-shadow:var(--sh);margin-bottom:10px;overflow:hidden}
+details.acc summary{list-style:none;padding:14px 16px;font-family:Fredoka;font-weight:600;font-size:17px;display:flex;align-items:center;gap:12px;cursor:pointer}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary .ic{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:20px;flex:none}
+details.acc summary:after{content:"+";margin-left:auto;color:var(--ink2);font-size:22px;transition:transform .2s}
+details.acc[open] summary:after{transform:rotate(45deg)}
+details.acc .body{padding:0 18px 16px;font-size:15px;line-height:1.5;color:#4E4843}
+details.acc .body ul{margin:6px 0;padding-left:20px}
+details.acc .body li{margin:4px 0}
+/* ---------- feedback ---------- */
+.toast{display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;white-space:normal;max-width:min(92vw,420px);text-align:left;line-height:1.3}
+.toast img{width:36px;height:36px;border-radius:50%;background:#fff;flex:none;object-fit:cover}
+.toast.noimg{padding:12px 20px}
+.toast .undo{margin-left:6px;color:var(--yel);font-weight:800;pointer-events:auto;padding:4px 6px}
+
+.goal{display:flex;align-items:center;gap:14px;margin-bottom:14px;width:100%;text-align:left}
+.goal .ring{width:62px;height:62px;flex:none;position:relative}
+.goal .ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:Fredoka;font-size:15px}
+.goal .t b{display:block;font-family:Fredoka;font-weight:600;font-size:17px}
+.goal .t small{color:var(--ink2);font-size:13px;font-weight:800}
+.more{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;color:var(--blueD);font-size:14px;font-weight:800;width:100%}
+.flash-ok .face.back{box-shadow:0 0 0 4px var(--mint),var(--sh)}
+.flash-no .face.back{box-shadow:0 0 0 4px var(--red),var(--sh)}
+.coach{position:relative;margin:10px auto 0;max-width:300px;background:var(--tile);box-shadow:var(--sh);border-radius:18px;padding:10px 14px;font-size:14px;text-align:center;opacity:0;transform:translateY(6px);transition:.35s}
+.coach.on{opacity:1;transform:none}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.badge-c{background:var(--tile);border-radius:20px;box-shadow:var(--sh);padding:12px 8px;text-align:center;font-size:12px;font-weight:800;line-height:1.25}
+.badge-c .ic{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;color:#fff;font-size:22px}
+.badge-c.off{opacity:.45}.badge-c.off .ic{background:#CFC8C0!important}
+.insight{display:flex;gap:12px;align-items:flex-start;background:var(--tile);border-radius:20px;box-shadow:var(--sh);padding:14px;margin-bottom:10px;font-size:14px;line-height:1.45}
+.insight .ic{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:20px;flex:none}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:8px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:11px;font-weight:800;color:var(--ink2)}
+.bars i{display:block;width:100%;border-radius:9px;background:var(--red);min-height:4px}
+.bars b{font-family:Fredoka;font-size:12px;color:var(--ink)}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+<link rel="stylesheet" href="css/extra.css">
+<meta name="theme-color" content="#F5F4F0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Maple">
+<link rel="apple-touch-icon" href="img/icon180.png">
+<link rel="icon" href="img/icon180.png">
+</head>
+<body>
+<!-- Íconos: Lucide (ISC) -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" /> <line x1="12" x2="15" y1="14" y2="11" /> <circle cx="12" cy="14" r="8" /></symbol>
+  <symbol id="i-cards" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20" /> <path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13" /></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M12.8 19.6A2 2 0 1 0 14 16H2" /> <path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" /> <path d="M9.8 4.4A2 2 0 1 1 11 8H2" /></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z" /></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="M8 13h.01" /> <path d="M12 13h.01" /> <path d="M16 13h.01" /> <path d="M8 17h.01" /> <path d="M12 17h.01" /> <path d="M16 17h.01" /></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="14" y="3" width="5" height="18" rx="1" /> <rect x="5" y="3" width="5" height="18" rx="1" /></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" /></symbol>
+  <symbol id="i-desk" viewBox="0 0 24 24"><path d="M10.293 2.293a1 1 0 0 1 1.414 0l2.5 2.5 5.994 1.227a1 1 0 0 1 .506 1.687l-7 7a1 1 0 0 1-1.687-.506l-1.227-5.994-2.5-2.5a1 1 0 0 1 0-1.414z" /> <path d="m14.207 4.793-3.414 3.414" /> <path d="M3 20a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" /> <path d="m9.086 6.5-4.793 4.793a1 1 0 0 0-.18 1.17L7 18" /></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" /> <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" /> <path d="M16 17h4" /> <path d="M4 13h4" /></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /> <path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="m15 18-.722-3.25" /> <path d="M2 8a10.645 10.645 0 0 0 20 0" /> <path d="m20 15-1.726-2.05" /> <path d="m4 15 1.726-2.05" /> <path d="m9 18 .722-3.25" /></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" /> <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" /> <path d="M5 21h14" /></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol>
+  <symbol id="i-q" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /> <path d="M12 17h.01" /></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4" /> <path d="M3 11v-1a4 4 0 0 1 4-4h14" /> <path d="m7 22-4-4 4-4" /> <path d="M21 13v1a4 4 0 0 1-4 4H3" /></symbol>
+  <symbol id="i-meh" viewBox="0 0 24 24"><path d="M15 10V9" /> <path d="M8 16h8" /> <path d="M9 10V9" /> <circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" /></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" /> <path d="M6.453 15h11.094" /> <path d="M8.5 2h7" /></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /> <path d="M7 2v20" /> <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1" /> <circle cx="12" cy="8" r="2" /> <path d="M12 10v12" /> <path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z" /> <path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z" /></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24"><path d="M15 10V9" /> <path d="M16.472 15a6 6 0 01-8.943 0" /> <path d="M9 10V9" /> <circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16" /> <path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95" /> <path d="m2 15 6 6" /> <path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91" /></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M17.925 20.056a6 6 0 0 0-11.851.001" /> <circle cx="12" cy="11" r="4" /> <circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4" /> <path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294" /> <path d="M17.996 5.125a4 4 0 012.526 5.77" /> <path d="M18 18a4 4 0 002-7.465" /> <path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517" /> <path d="M6 18a4 4 0 01-2-7.465" /> <path d="M6.004 5.125a4 4 0 00-2.526 5.77" /></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2" /> <line x1="8" x2="16" y1="6" y2="6" /> <line x1="16" x2="16" y1="14" y2="18" /> <path d="M16 10h.01" /> <path d="M12 10h.01" /> <path d="M8 10h.01" /> <path d="M12 14h.01" /> <path d="M8 14h.01" /> <path d="M12 18h.01" /> <path d="M8 18h.01" /></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 9h18" /> <path d="M9 3v18" /> <rect x="3" y="3" width="18" height="18" rx="2" /></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18" /> <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" /> <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" /> <path d="m5 8 3 8a5 5 0 0 1-6 0zV7" /> <path d="M7 21h10" /></symbol>
+  <symbol id="i-beaker" viewBox="0 0 24 24"><path d="M4.5 3h15" /> <path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" /> <path d="M6 14h12" /></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" x2="5" y1="5" y2="19" /> <circle cx="6.5" cy="6.5" r="2.5" /> <circle cx="17.5" cy="17.5" r="2.5" /></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" /> <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="M12 8v4" /> <path d="M12 16h.01" /></symbol>
+  <symbol id="i-report" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="m19 9-5 5-4-4-3 3" /></symbol>
+  <symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" /></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /> <path d="m14.5 12.5 2-2" /> <path d="m11.5 9.5 2-2" /> <path d="m8.5 6.5 2-2" /> <path d="m17.5 15.5 2-2" /></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24"><line x1="4" x2="20" y1="9" y2="9" /> <line x1="4" x2="20" y1="15" y2="15" /> <line x1="10" x2="8" y1="3" y2="21" /> <line x1="16" x2="14" y1="3" y2="21" /></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" /></symbol>
+  <symbol id="i-bomb" viewBox="0 0 24 24"><circle cx="11" cy="13" r="9" /> <path d="M14.35 4.65 16.3 2.7a2.41 2.41 0 0 1 3.4 0l1.6 1.6a2.4 2.4 0 0 1 0 3.4l-1.95 1.95" /> <path d="m22 2-1.5 1.5" /></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" /></symbol>
+  <symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="i-cylinder" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5v14a9 3 0 0 0 18 0V5" /></symbol>
+  <symbol id="i-tube" viewBox="0 0 24 24"><path d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01a2.83 2.83 0 0 1 0-4L17 3" /> <path d="m16 2 6 6" /> <path d="M12 16H4" /></symbol>
+  <symbol id="i-skull" viewBox="0 0 24 24"><path d="m12.5 17-.5-1-.5 1h1z" /> <path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z" /> <circle cx="15" cy="12" r="1" /> <circle cx="9" cy="12" r="1" /></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1" /> <path d="m9 20 3-6 3 6" /> <path d="m6 8 6 2 6-2" /> <path d="M12 10v4" /></symbol>
+  <symbol id="i-fish" viewBox="0 0 24 24"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z" /> <path d="M18 12v.5" /> <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86" /> <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33" /> <path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4" /> <path d="m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98" /></symbol>
+  <symbol id="i-type" viewBox="0 0 24 24"><path d="M12 4v16" /> <path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" /> <path d="M9 20h6" /></symbol>
+  <symbol id="i-calcheck" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="m9 15 2 2 4-4" /></symbol>
+</svg>
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><i></i>Maple</div>
+    <button class="rbtn" id="btnPlus" aria-label="Anotar algo rápido"><svg class="i"><use href="#i-plus"/></svg></button><button class="rbtn hide" id="btnMe" aria-label="Tu perfil y ajustes"><svg class="i"><use href="#i-user"/></svg></button>
+    <button class="hide" id="btnScience" aria-hidden="true" tabindex="-1"></button>
+  </div>
+
+  <!-- ===================== HOY ===================== -->
+  <section class="view on" id="v-hoy" data-acc="red">
+    <div class="hero" id="heroBox">
+      <div class="say" id="say">¡Hola!</div>
+      <div class="plat"></div>
+      <div class="mw" id="heroMw"><img id="heroImg" src="img/hq/front.webp" alt="Maple"></div>
+    </div>
+
+    <div class="tile">
+      <div class="label">¿Cómo llegas hoy?</div>
+      <div class="energy" id="energy"></div>
+      <div class="facelbl"><span>Sin energía</span><span>¡Con todo!</span></div>
+      <div class="gap"></div>
+      <div class="row"><span class="sub" style="font-size:13px;flex:none"><svg class="i" style="vertical-align:-2px"><use href="#i-moon"/></svg> Dormí</span><div class="seg grow" id="sleepSeg"></div></div>
+      <div class="sub center hide" id="checkTip" style="font-size:13px;margin-top:10px"></div>
+      <button class="mood-link" id="homeFeel"><svg class="i"><use href="#i-smile"/></svg>¿Y cómo te sientes por dentro?<svg class="i go"><use href="#i-chev"/></svg></button>
+    </div>
+    <div class="gap"></div>
+
+    <div id="ctxBox"></div>
+    <div id="hoyClasses"></div>
+
+    <div class="apps">
+      <button class="app" id="appFocus"><div class="ic" style="background:var(--red)"><svg class="i"><use href="#i-timer"/></svg></div><div><b>Enfocar</b><small id="appFocusSub">25 min</small></div></button>
+      <button class="app" id="appRev"><span class="badge hide" id="dueBadge"></span><div class="ic" style="background:var(--blue)"><svg class="i"><use href="#i-cards"/></svg></div><div><b>Repasar</b><small id="appRevSub">Tarjetas</small></div></button>
+      <button class="app" id="appExams"><div class="ic" style="background:var(--lil)"><svg class="i"><use href="#i-cal"/></svg></div><div><b>Exámenes</b><small id="appExamSub">Planear</small></div></button>
+      <button class="app" id="appPark"><span class="badge hide" id="parkBadge" style="background:var(--yelD)"></span><div class="ic" style="background:var(--yel)"><svg class="i"><use href="#i-note"/></svg></div><div><b>Para después</b><small>Ideas sueltas</small></div></button>
+    </div>
+    <div class="gap"></div>
+
+    <div class="tile">
+      <button class="goal" id="goalBtn" aria-label="Ver mi progreso"><div class="ring" id="goalRing"></div><div class="t grow"><b id="goalTxt">Meta de hoy</b><small id="goalSub"></small></div><svg class="i" style="color:#CFC8C0;font-size:22px"><use href="#i-chev"/></svg></button>
+      <div class="today">
+        <div class="n"><b id="stMin">0</b><span>min</span></div><div class="sep"></div>
+        <div class="n"><b id="stBlocks">0</b><span>bloques</span></div><div class="sep"></div>
+        <div class="n"><b id="stCards">0</b><span>tarjetas</span></div>
+      </div>
+      <div class="week" id="week"></div>
+    </div>
+    <div id="hoyFact"></div>
+  </section>
+
+  <!-- ===================== ENFOCAR ===================== -->
+  <section class="view" id="v-foco" data-acc="red">
+    <div class="step on" id="f-plan">
+      <h1 class="title">¿Qué vas a hacer?</h1>
+      <input class="field" id="taskInput" maxlength="80" placeholder="Ej.: leer el capítulo 3 y hacerme preguntas">
+      <div class="chips" id="taskChips"></div>
+      <div class="gap"></div>
+      <div class="seg tall" id="durSeg"></div>
+      <div class="gap"></div>
+      <div class="toggles" id="ritual"></div>
+      <div class="gap"></div>
+      <button class="ifthen" id="ifBtn"><svg class="i"><use href="#i-loop"/></svg><span>Si me distraigo, <b id="ifTxt"></b></span></button>
+      <div class="gap2"></div>
+      <button class="btn" id="btnStart"><svg class="i"><use href="#i-play"/></svg>Empezar</button>
+    </div>
+
+    <div class="step" id="f-run">
+      <div class="task" id="runTask"></div>
+      <div class="tasksub" id="runSub"></div>
+      <div class="stage">
+        <svg class="ring" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="#fff" stroke="#EFEBE5" stroke-width="7"/>
+          <circle id="ringArc" cx="50" cy="50" r="44" fill="none" stroke="var(--red)" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="0" style="transition:stroke-dashoffset .5s linear"/>
+        </svg>
+        <div class="mw" id="runMw"><img id="runImg" src="img/hq/front.webp" alt=""></div>
+        <div class="time" id="runTime">25:00</div>
+      </div>
+      <div class="coach" id="coach"></div>
+      <div class="round-row">
+        <button class="rb" id="btnPause"><div class="c"><svg class="i" id="pauseIc"><use href="#i-pause"/></svg></div><span id="pauseTxt">Pausa</span></button>
+        <button class="rb big" id="btnDistract"><div class="c"><svg class="i"><use href="#i-cloud"/></svg><span class="badge hide" id="distractN">0</span></div><span>Me distraje</span></button>
+        <button class="rb" id="btnStop"><div class="c"><svg class="i"><use href="#i-stop"/></svg></div><span>Terminar</span></button>
+      </div>
+    </div>
+
+    <div class="step" id="f-done">
+      <div class="hero" style="height:220px"><div class="plat"></div><div class="mw" id="doneMw"><img id="doneImg" src="img/hq/jump.webp" alt=""></div></div>
+      <h1 class="title center" id="doneTitle" style="margin-bottom:4px">¡Bloque listo!</h1>
+      <p class="sub center" id="doneSub" style="margin:0 0 16px"></p>
+      <div class="tile">
+        <div class="label center" style="margin-left:0">Concentración</div>
+        <div class="dots" id="focusRating"></div>
+      </div>
+      <div class="gap"></div>
+      <div class="tile">
+        <div class="label center" style="margin-left:0" id="breakTitle">Descanso · 5 min</div>
+        <div class="acts" id="acts"></div>
+      </div>
+      <div class="gap2"></div>
+      <button class="btn" id="btnBreak" style="--acc:var(--mint);--accD:var(--mintD)">Descansar</button>
+      <button class="link" id="btnSkipBreak">Saltar descanso</button>
+    </div>
+
+    <div class="step" id="f-break">
+      <div class="task" id="brkName"></div>
+      <div id="brkBreath">
+        <div class="breath"><div class="orb2"></div><div class="orb" id="orb"></div><div class="mw" id="brMw"><img id="brImg" src="img/hq/front.webp" alt=""></div></div>
+        <div class="btxt" id="breathTxt"></div>
+      </div>
+      <div id="brkOther">
+        <div class="hero" style="height:240px;overflow:hidden"><div class="plat"></div><div class="mw" id="brkMw"><img id="brkImg" src="img/hq/walk_0.webp" alt=""></div><div class="zz hide" id="brkZz"><span>z</span><span>z</span><span>Z</span></div></div>
+        <div class="btxt" id="brkStep" style="font-size:20px;padding:0 10px"></div>
+      </div>
+      <div class="bigtime" id="brkTime">5:00</div>
+      <button class="link" id="btnEndBreak">Terminar descanso</button>
+    </div>
+
+    <div class="step" id="f-next">
+      <div class="hero"><div class="say" id="nextSay">¿Otro?</div><div class="plat"></div><div class="mw" id="nextMw"><img id="nextImg" src="img/hq/front.webp" alt=""></div></div>
+      <button class="btn" id="btnAgain"><svg class="i"><use href="#i-play"/></svg>Otro bloque</button>
+      <div class="gap"></div>
+      <button class="btn soft" id="btnReplan">Cambiar de tarea</button>
+      <button class="link" id="btnFinishDay">Por hoy es suficiente</button>
+    </div>
+  </section>
+
+  <!-- ===================== REPASAR ===================== -->
+  <section class="view" id="v-rep" data-acc="blue">
+    <div class="step on" id="r-home">
+      <h1 class="title">Repasar</h1>
+      <div class="tile">
+        <div class="revhead"><b id="dueN">0</b><div class="sub" style="padding-bottom:6px" id="dueLbl">tarjetas para hoy</div></div>
+        <div class="chips" id="deckChips" style="margin:6px -4px 0"></div>
+        <div class="boxes" id="boxes"></div>
+      </div>
+      <div class="gap"></div>
+      <button class="btn" id="btnReview"><svg class="i"><use href="#i-play"/></svg>Empezar</button>
+      <div class="gap2"></div>
+      <div class="label">Más formas de aprender</div>
+      <button class="big-tile" id="toolExplain"><div class="ic" style="background:var(--pink)"><svg class="i"><use href="#i-chat"/></svg></div><div><b>Explícaselo a Maple</b><small>Enseñar un tema es una de las mejores formas de aprenderlo</small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile" id="toolMethod"><div class="ic" style="background:var(--blue)"><svg class="i"><use href="#i-pen"/></svg></div><div><b>Resolver paso a paso</b><small>Método guiado para ejercicios y problemas</small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile" id="toolNew"><div class="ic" style="background:var(--yel)"><svg class="i"><use href="#i-plus"/></svg></div><div><b>Crear tarjeta</b><small>Con tus apuntes, en forma de pregunta</small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    </div>
+
+    <div class="step" id="r-session">
+      <div class="row">
+        <button class="rbtn" id="btnExitRev" aria-label="Salir"><svg class="i"><use href="#i-x"/></svg></button>
+        <div class="progress grow"><i id="rBar" style="width:0"></i></div>
+      </div>
+      <div class="gap"></div>
+      <div class="flip" id="flip">
+        <div class="inner">
+          <div class="face front"><span class="tag" id="rTag"></span><div class="q" id="rQ"></div></div>
+          <div class="face back"><span class="tag">Respuesta</span><div class="a" id="rA"></div></div>
+        </div>
+      </div>
+      <div class="gap"></div>
+      <div id="rConf">
+        <div class="qlabel">Piensa tu respuesta. ¿Qué tanto la sabes?</div>
+        <div class="rate" id="confBtns">
+          <button data-c="0"><svg class="i" style="color:var(--ink2)"><use href="#i-q"/></svg>Ni idea</button>
+          <button data-c="1"><svg class="i" style="color:var(--yelD)"><use href="#i-meh"/></svg>Creo que sí</button>
+          <button data-c="2"><svg class="i" style="color:var(--blue)"><use href="#i-target"/></svg>La sé</button>
+        </div>
+      </div>
+      <div id="rRateBox" class="hide">
+        <div class="qlabel">¿Cómo te fue de verdad?</div>
+        <div class="rate" id="rRate">
+          <button data-r="0"><svg class="i" style="color:var(--red)"><use href="#i-x"/></svg>No me salió</button>
+          <button data-r="1"><svg class="i" style="color:var(--yelD)"><use href="#i-meh"/></svg>A medias</button>
+          <button data-r="2"><svg class="i" style="color:var(--mint)"><use href="#i-check"/></svg>La sabía</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step" id="r-end">
+      <div class="hero" style="height:220px"><div class="plat"></div><div class="mw" id="rEndMw"><img id="rEndImg" src="img/hq/jump.webp" alt=""></div></div>
+      <h1 class="title center" id="rEndTitle">¡Listo!</h1>
+      <p class="sub center" id="rEndSub" style="margin-top:-6px"></p>
+      <div class="tile" id="calibBox"></div>
+      <div class="gap2"></div>
+      <button class="btn" id="btnRevBack">Volver</button>
+    </div>
+  </section>
+
+  <!-- ===================== LAB ===================== -->
+  <section class="view" id="v-lab" data-acc="lil"><div id="labBody"></div></section>
+
+  <!-- ===================== BIENESTAR ===================== -->
+  <section class="view" id="v-calma" data-acc="mint">
+    <h1 class="title">Tú</h1>
+    <button class="big-tile feel-cta" id="calmFeel"><div class="ic" style="background:var(--yel)"><svg class="i"><use href="#i-smile"/></svg></div><div><b>¿Cómo estás?</b><small>Dime qué sientes y te sugiero qué hacer</small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    <div id="tuSug"></div>
+    <div class="label">Para ahora</div>
+    <button class="big-tile row-t" id="calmBreath"><div class="ic" style="background:var(--mint)"><svg class="i"><use href="#i-wind"/></svg></div><div><b>Respirar</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    <button class="big-tile row-t" id="calmNight"><div class="ic" style="background:#5B6CC9"><svg class="i"><use href="#i-moon"/></svg></div><div><b>Cerrar el día</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    <button class="big-tile row-t" id="calmHelp"><div class="ic" style="background:var(--red)"><svg class="i"><use href="#i-help"/></svg></div><div><b>Pedir ayuda</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    <details class="more-d"><summary>Más para cuidarte</summary>
+      <button class="big-tile row-t" id="calmExam"><div class="ic" style="background:var(--lil)"><svg class="i"><use href="#i-bolt"/></svg></div><div><b>Antes del examen</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile row-t" id="calmRestart"><div class="ic" style="background:var(--yel)"><svg class="i"><use href="#i-sprout"/></svg></div><div><b>Hoy no salió</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile row-t" id="calmBelong"><div class="ic" style="background:var(--blue)"><svg class="i"><use href="#i-people"/></svg></div><div><b>¿No encajo?</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile row-t" id="calmCycle"><div class="ic" style="background:#E85A7E"><svg class="i"><use href="#i-flower"/></svg></div><div><b>Mi ciclo</b></div><svg class="i go"><use href="#i-chev"/></svg></button>
+      <button class="big-tile row-t" id="calmWhy"><div class="ic" style="background:var(--pink)"><svg class="i"><use href="#i-heart"/></svg></div><div><b>Mi porqué</b><small id="whySub"></small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+    </details>
+    <div class="gap"></div><div class="label">Tu progreso</div>
+    <button class="tile goal" id="tuProg" style="margin:0"><div class="ring" id="tuRing"></div><div class="t grow"><b id="tuProgT">Esta semana</b><small id="tuProgS"></small></div><svg class="i" style="color:var(--ink2);font-size:22px"><use href="#i-chev"/></svg></button>
+    <div class="gap"></div>
+    <button class="big-tile row-t" id="tuSet"><div class="ic" style="background:var(--ink2)"><svg class="i"><use href="#i-user"/></svg></div><div><b>Ajustes y perfil</b><small>Nombre, apariencia, respaldo</small></div><svg class="i go"><use href="#i-chev"/></svg></button>
+  </section>
+</div>
+
+<nav class="dock">
+  <button data-v="hoy" class="on" style="--c:var(--red)"><svg class="i"><use href="#i-home"/></svg><span>Hoy</span></button>
+  <button data-v="est" style="--c:var(--blue)"><svg class="i"><use href="#i-cards"/></svg><span>Estudiar</span></button>
+  <button data-v="lab" style="--c:var(--lil)"><svg class="i"><use href="#i-flask"/></svg><span>Lab</span></button>
+  <button data-v="tu" style="--c:var(--mint)"><svg class="i"><use href="#i-user"/></svg><span>Tú</span></button>
+</nav>
+
+<div class="sheet-bg" id="sheetBg"><div class="sheet"><div class="grab"></div><div id="sheetBody"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ===================== utilidades ===================== */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (k === 'class') e.className = v; else if (k === 'html') e.innerHTML = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v); } for (const k of kids) e.append(k); return e; };
+const ic = (name, style = '') => `<svg class="i" style="${style}"><use href="#i-${name}"/></svg>`;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const fmt = s => { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + pad(s % 60); };
+const dayKey = (d = new Date()) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const dayNum = (d = new Date()) => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+const keyToNum = k => { const [y, m, d] = k.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 86400000); };
+const numToDate = n => { const d = new Date(n * 86400000); return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()); };
+const DOW = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const shortDate = n => { const d = numToDate(n); return DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MES[d.getMonth()]; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const steps = (view, id) => { $$('#' + view + ' > .step').forEach(s => s.classList.toggle('on', s.id === id)); document.body.classList.toggle('immersive', id === 'f-run' || id === 'f-break' || id === 'r-session'); };
+function toast(t, face = 'feliz', undo = null) {
+  const e = $('#toast'); e.innerHTML = '';
+  e.classList.toggle('noimg', !face);
+  if (face) e.append(el('img', { src: 'img/hq/pe_' + face + '.webp', alt: '' }));
+  e.append(el('span', {}, t));
+  if (undo) e.append(el('button', { class: 'undo', onclick: () => { undo(); e.classList.remove('on'); } }, 'Deshacer'));
+  e.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => e.classList.remove('on'), undo ? 4200 : 2600);
+  try { navigator.vibrate && navigator.vibrate(12); } catch (x) {}
+}
+function confetti() {
+  const box = el('div', { class: 'confetti' }); const cols = ['#FF5B4D', '#FFC53D', '#2FC79B', '#46A7F5', '#9C8CF2', '#FF8FB1'];
+  for (let i = 0; i < 44; i++) box.append(el('i', { style: `left:${Math.random() * 100}%;background:${pick(cols)};animation-delay:${Math.random() * .4}s;animation-duration:${1.2 + Math.random()}s` }));
+  document.body.append(box); setTimeout(() => box.remove(), 2700);
+}
+
+/* ===================== sonido ===================== */
+let AC = null;
+function audio() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) { AC = null; } return AC; }
+function sfx(kind) {
+  const ac = audio(); if (!ac) return;
+  const set = { tap: [[880, 0, .06]], end: [[659, 0, .5], [784, .14, .5], [1047, .28, .8]], soft: [[523, 0, .4], [659, .1, .5]], brk: [[784, 0, .5], [587, .16, .7]], ok: [[988, 0, .15], [1319, .07, .25]], no: [[330, 0, .25]], hop: [[600, 0, .08], [900, .05, .12]] }[kind];
+  if (!set) return;
+  set.forEach(([f, d, len]) => { const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + d; o.type = kind === 'tap' || kind === 'hop' ? 'triangle' : 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(kind === 'tap' ? .045 : .15, t + .015); g.gain.exponentialRampToValueAtTime(.001, t + len); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + len + .05); });
+  if (kind === 'end') try { navigator.vibrate && navigator.vibrate([100, 60, 100]); } catch (e) {}
+}
+document.addEventListener('click', e => { if (e.target.closest('button')) sfx('tap'); }, true);
+
+/* ===================== estado ===================== */
+const KEY = 'maple-estudio-v1';
+const DEFAULT = () => ({ v: 2, updated: 0, days: {}, parking: [], cards: {}, custom: [], energy: null, energyDay: null, run: null, ritual: [false, false, false], ifthen: 0,
+  exams: [], tomorrow: { day: null, items: [] }, why: '', help: { name: '', phone: '' }, calib: { 0: [0, 0], 1: [0, 0], 2: [0, 0] }, explains: [] });
+let S = DEFAULT();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(DEFAULT(), JSON.parse(raw)); } catch (e) {}
+let cloud = null, saveT = null;
+function save() {
+  S.updated = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  if (cloud) { clearTimeout(saveT); saveT = setTimeout(() => cloud.ref.set({ state: JSON.stringify(S) }).catch(() => {}), 900); }
+}
+function today() { const k = dayKey(); if (!S.days[k]) S.days[k] = { min: 0, blocks: 0, cards: 0, focus: [], distract: 0, sleep: null, habits: {} }; return S.days[k]; }
+(async () => {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    if (!db || !user) return;
+    const id = await user.id(); if (!id) return;
+    const ref = db.collection('data/users/' + id).doc('estado');
+    const snap = await ref.get();
+    const data = snap && (typeof snap.data === 'function' ? snap.data() : snap);
+    if (data && data.state) {
+      const remote = JSON.parse(data.state);
+      if ((remote.updated || 0) > (S.updated || 0)) { S = Object.assign(DEFAULT(), remote); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} renderAll(); resumeRun(); }
+    }
+    cloud = { ref };
+    if (!data || !data.state) save();
+  } catch (e) { cloud = null; }
+})();
+
+/* ===================== Maple: motor de animación ===================== */
+const FR = { front: 'front', blink: 'front_blink', look: 'front34', wave: 'wave', jump: 'jump', sit: 'sit', sleep: 'sleep', profile: 'profile', hurt: 'hurt', run: 'run' };
+const WALK = [0, 1, 2, 3, 4, 5, 6, 7].map(i => 'walk_' + i);
+[...Object.values(FR), ...WALK].forEach(n => { new Image().src = 'img/hq/' + n + '.webp'; });
+class Maple {
+  constructor(mw, img) { this.mw = mw; this.img = img; this.timers = []; this.mode = null; this.flip = false; this.extra = null; img.addEventListener('click', () => this.tap()); this.onTap = null; }
+  src(n) { this.img.src = 'img/hq/' + n + '.webp'; }
+  clear() { this.timers.forEach(t => { clearTimeout(t); clearInterval(t); }); this.timers = []; this.img.classList.remove('alive'); this.mw.classList.remove('walker'); this.img.style.transform = ''; this.img.style.transition = ''; this.img.style.animation = ''; this.img.style.opacity = ''; if (this.extra) { this.extra.remove(); this.extra = null; } }
+  later(fn, ms) { const t = setTimeout(fn, ms); this.timers.push(t); return t; }
+  every(fn, ms) { const t = setInterval(fn, ms); this.timers.push(t); return t; }
+  anim(cls, ms) { this.mw.classList.remove('a-hop', 'a-cele', 'a-rock', 'a-talk', 'a-shake'); void this.mw.offsetWidth; this.mw.classList.add(cls); setTimeout(() => this.mw.classList.remove(cls), ms); }
+  /* estado base: de pie, respira, parpadea y a veces mira a un lado */
+  idle() {
+    this.clear(); this.mode = 'idle'; this.src(FR.front); this.img.classList.add('alive');
+    const blink = () => { if (this.mode !== 'idle') return; this.src(FR.blink); this.later(() => { if (this.mode === 'idle') this.src(FR.front); }, 130); if (Math.random() < .25) this.later(() => { if (this.mode !== 'idle') return; this.src(FR.blink); this.later(() => { if (this.mode === 'idle') this.src(FR.front); }, 110); }, 260); this.later(blink, 2400 + Math.random() * 3600); };
+    const look = () => { if (this.mode !== 'idle') return; this.img.classList.remove('alive'); this.src(FR.look); this.img.style.transform = Math.random() < .5 ? 'scaleX(-1)' : ''; this.later(() => { if (this.mode === 'idle') { this.src(FR.front); this.img.style.transform = ''; this.img.classList.add('alive'); } }, 1300); this.later(look, 9000 + Math.random() * 8000); };
+    this.later(blink, 1500 + Math.random() * 2000); this.later(look, 7000 + Math.random() * 5000);
+  }
+  pose(name, then = 'idle', ms = 900, cls = null, clsMs = 700) { this.clear(); this.mode = name; this.src(FR[name] || name); if (cls) this.anim(cls, clsMs); if (then) this.later(() => this[then](), ms); }
+  hop() { sfx('hop'); this.pose('jump', 'idle', 650, 'a-hop', 650); }
+  wave() { this.pose('wave', 'idle', 1100, 'a-rock', 900); }
+  celebrate() { this.pose('jump', 'idle', 1350, 'a-cele', 1300); }
+  talk() { this.anim('a-talk', 450); }
+  shake() { this.anim('a-shake', 450); }
+  sit() { this.clear(); this.mode = 'sit'; this.src(FR.sit); this.img.classList.add('alive'); }
+  sleep() { this.clear(); this.mode = 'sleep'; this.src(FR.sleep); this.img.classList.add('alive'); this.extra = el("div", { class: "zz", style: "top:30%;right:30%", html: "<span>z</span><span>z</span><span>Z</span>" }); this.mw.parentElement.append(this.extra); }
+  think() { this.clear(); this.mode = 'think'; this.src(FR.front); this.img.classList.add('alive'); this.extra = el('div', { class: 'dots3', html: '<i></i><i></i><i></i>' }); this.mw.parentElement.append(this.extra); }
+  walk(across = true) {
+    this.clear(); this.mode = 'walk'; let i = 0; this.src(WALK[0]);
+    this.every(() => { i = (i + 1) % 8; this.src(WALK[i]); }, 115);
+    if (across) { this.mw.classList.add('walker'); this.flip = false; const t0 = Date.now(); this.every(() => { const ph = ((Date.now() - t0) % 6000) / 6000; const left = ph >= .5; this.img.style.transform = left ? 'scaleX(-1)' : ''; }, 100); }
+  }
+  look(ms = 1600) { this.pose('profile', 'idle', ms); }
+  tap() { if (this.onTap) return this.onTap(); const r = Math.random(); if (r < .45) this.wave(); else if (r < .8) this.hop(); else this.look(); }
+}
+const mHero = new Maple($('#heroMw'), $('#heroImg'));
+const mRun = new Maple($('#runMw'), $('#runImg'));
+const mDone = new Maple($('#doneMw'), $('#doneImg'));
+const mBr = new Maple($('#brMw'), $('#brImg'));
+const mBrk = new Maple($('#brkMw'), $('#brkImg'));
+const mNext = new Maple($('#nextMw'), $('#nextImg'));
+const mREnd = new Maple($('#rEndMw'), $('#rEndImg'));
+mHero.idle();
+const HERO_LINES = ['¡Hola!', '¡Tú puedes!', 'Un paso a la vez', '¿Un bloquecito?', '¿Tomaste agua?', 'Estoy contigo', 'Hoy cuenta, aunque sea poco'];
+mHero.onTap = () => { const r = Math.random(); if (r < .4) mHero.wave(); else if (r < .7) mHero.hop(); else if (r < .85) mHero.pose('emo_risa', 'idle', 1000, 'a-hop', 650); else mHero.look(); $('#say').textContent = pick(HERO_LINES); };
+
+/* ===================== navegación ===================== */
+const ACC = { red: ['var(--red)', 'var(--redD)'], blue: ['var(--blue)', 'var(--blueD)'], mint: ['var(--mint)', 'var(--mintD)'] };
+let session = null;
+function show(v) {
+  const sec = $('#v-' + v);
+  $$('.view').forEach(x => x.classList.toggle('on', x === sec));
+  $$('.dock button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  const st = sec.querySelector('.step.on'); document.body.classList.toggle('immersive', !!st && ['f-run', 'f-break', 'r-session'].includes(st.id));
+  const [a, d] = ACC[sec.dataset.acc]; document.documentElement.style.setProperty('--acc', a); document.documentElement.style.setProperty('--accD', d);
+  window.scrollTo({ top: 0 });
+  if (v === 'hoy') renderHoy();
+  if (v === 'rep' && !session) renderRepHome();
+  if (v === 'calma') renderCalma();
+  if (v === 'foco' && !S.run && !['f-plan', 'f-done', 'f-next'].some(id => $('#' + id).classList.contains('on'))) renderPlan();
+}
+$$('.dock button').forEach(b => b.addEventListener('click', () => show(b.dataset.v)));
+
+/* ===================== HOY ===================== */
+const FACES = [['tired', 15, 5], ['sad', 15, 5], ['neutral', 25, 5], ['feliz', 25, 5], ['risa', 45, 10]];
+const SLEEP = [['<6', 'menos de 6 h'], ['6-7', '6 a 7 h'], ['7-9', '7 a 9 h'], ['9+', 'más de 9 h']];
+let plan = { task: '', focus: 25, brk: 5 };
+const energy = () => S.energyDay === dayKey() ? S.energy : null;
+function applyEnergy() {
+  const e = energy(); const f = FACES[(e || 3) - 1]; plan.focus = f[1]; plan.brk = f[2];
+  if (today().sleep === '<6' && plan.focus > 25) { plan.focus = 25; plan.brk = 5; }
+  const cl = (S.cycle && S.cycle.log[dayKey()]) || {}; if ((cl.pain || 0) >= 2) { plan.focus = 15; plan.brk = 5; }
+}
+function sayLine() {
+  const h = new Date().getHours(), d = today(), e = energy(), ex = nextExam();
+  if (ex && ex.left === 0) return '¡Hoy es tu examen! Tú puedes';
+  if (d.blocks >= 4) return '¡' + d.blocks + ' bloques hoy! Descansa';
+  if (d.blocks > 0) return d.min + ' min hoy. ¡Bien!';
+  if (h < 5 || h >= 23) return 'Es tarde… ¿dormimos?';
+  if (d.sleep === '<6') return 'Dormiste poco: vamos suave';
+  if (e === 1 || e === 2) return 'Algo cortito, sin presión';
+  if (e === 5) return '¡A por lo difícil!';
+  const nm = S.name ? ', ' + S.name : '';
+  if (h < 12) return '¡Buenos días' + nm + '!';
+  if (h < 19) return '¡Buenas tardes' + nm + '!';
+  return 'Buenas noches' + nm;
+}
+function renderHoy() {
+  $('#say').textContent = sayLine();
+  const en = $('#energy'); en.innerHTML = ''; const e = energy();
+  FACES.forEach((f, i) => en.append(el('button', { class: e === i + 1 ? 'on' : '', 'aria-label': 'energía ' + (i + 1), onclick: () => { S.energy = i + 1; S.energyDay = dayKey(); save(); applyEnergy(); renderHoy(); i === 4 ? mHero.pose('emo_risa', 'idle', 1100, 'a-hop', 650) : i === 3 ? mHero.hop() : i === 0 ? mHero.pose('emo_tired', 'idle', 1600, 'a-talk', 450) : i === 1 ? mHero.pose('emo_sad', 'idle', 1600, 'a-talk', 450) : mHero.talk(); } }, el('img', { src: 'img/hq/pe_' + f[0] + '.webp', alt: '' }))));
+  const d = today();
+  const ss = $('#sleepSeg'); ss.innerHTML = '';
+  SLEEP.forEach(([k, lab]) => ss.append(el('button', { class: d.sleep === k ? 'on' : '', 'aria-label': 'dormí ' + lab, onclick: () => { d.sleep = k; save(); applyEnergy(); renderHoy(); mHero.talk(); } }, k)));
+  const tip = $('#checkTip');
+  const tipTxt = d.sleep === '<6' ? 'Con poco sueño cuesta más concentrarse y recordar. Hoy bloques cortos, y esta noche intenta acostarte más temprano.' : (e === 1 ? 'Si no tienes energía, descansar también es parte del plan. Un bloque de 15 min o nada está bien.' : '');
+  tip.textContent = tipTxt; tip.classList.toggle('hide', !tipTxt);
+  applyEnergy();
+  $('#appFocusSub').textContent = plan.focus + ' min';
+  const due = dueCards('all').length;
+  $('#dueBadge').textContent = due; $('#dueBadge').classList.toggle('hide', !due);
+  $('#appRevSub').textContent = due ? due + ' para hoy' : 'Al día';
+  const ex = nextExam();
+  $('#appExamSub').textContent = ex ? (ex.left === 0 ? '¡Hoy: ' + ex.name + '!' : ex.left === 1 ? 'Mañana: ' + ex.name : ex.left + ' días · ' + ex.name) : 'Planear';
+  const pk = S.parking.filter(p => !p.done).length;
+  $('#parkBadge').textContent = pk; $('#parkBadge').classList.toggle('hide', !pk);
+  renderGoal();
+  $('#stMin').textContent = d.min; $('#stBlocks').textContent = d.blocks; $('#stCards').textContent = d.cards;
+  const wk = $('#week'); wk.innerHTML = ''; const now = new Date(); const L = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+  for (let i = 6; i >= 0; i--) {
+    const dt = new Date(now); dt.setDate(now.getDate() - i); const m = (S.days[dayKey(dt)] || {}).min || 0;
+    const sz = m ? Math.min(22, 10 + m / 8) : 8;
+    wk.append(el('div', {}, el('i', { style: `width:${sz}px;height:${sz}px;${m ? 'background:var(--red);' : ''}${i === 0 ? 'outline:2px solid var(--red);outline-offset:3px;' : ''}`, title: m + ' min' }), el('span', {}, L[dt.getDay()])));
+  }
+  renderCtx();
+}
+/* tarjeta de contexto: lo más útil para este momento del día */
+function renderCtx() {
+  const box = $('#ctxBox'); box.innerHTML = '';
+  let shown = 0;
+  const add = (color, icon, title, sub, fn) => { if (shown++ >= 2) return; box.append(el('button', { class: 'tile ctx', onclick: fn, html: `<div class="ic" style="background:${color}">${ic(icon)}</div><div class="grow"><b>${esc(title)}</b><small>${esc(sub)}</small></div>${ic('chev', 'color:#CFC8C0;font-size:22px')}` })); box.append(el('div', { class: 'gap' })); };
+  const h = new Date().getHours(), ex = nextExam();
+  if (ex && ex.left === 0) add('var(--lil)', 'bolt', 'Kit para tu examen', 'Nervios a favor, vaciar la cabeza y respirar', openExamKit);
+  const todo = examTasksToday();
+  if (todo.length) add('var(--lil)', 'cal', todo.length === 1 ? 'Hoy toca: ' + todo[0].label : `Hoy tocan ${todo.length} repasos`, todo[0].exam.name + ' · plan espaciado', () => openExam(todo[0].exam.id));
+  const tm = S.tomorrow;
+  if (tm.day === dayKey() && tm.items.some(i => !i.done)) add('#5B6CC9', 'note', 'Lo que dejaste para hoy', tm.items.filter(i => !i.done).length + ' pendiente(s) de anoche', openCarry);
+  if (h >= 19 && S.tomorrow.day !== dayKey(new Date(Date.now() + 86400000))) add('#5B6CC9', 'moon', 'Cerrar el día', '5 minutos: lista de mañana y a descansar', openNight);
+  const cl = (S.cycle && S.cycle.log[dayKey()]) || {};
+  if (S.showCycle === false) {} else if ((cl.pain || 0) >= 2) add('#E85A7E', 'heart', 'Hoy con dolor: vamos suave', 'Calor, bloques de 15 min y tareas livianas', () => openCycle());
+  else if (S.cycle && Object.keys(S.cycle.log).length) { const st = cycleStats(); if (st.next != null && st.next - dayNum() >= 0 && st.next - dayNum() <= 1 && !(cl.flow > 0)) add('#E85A7E', 'flower', 'Tu periodo podría llegar pronto', '¿Tienes tu kit en la mochila?', () => openCycle()); }
+  if ((energy() || 3) <= 2 && S.why) add('var(--pink)', 'heart', 'Tu porqué', S.why.slice(0, 70) + (S.why.length > 70 ? '…' : ''), openWhy);
+}
+$('#appFocus').addEventListener('click', () => { applyEnergy(); show('foco'); renderPlan(); });
+$('#appRev').addEventListener('click', () => show('rep'));
+$('#appExams').addEventListener('click', openExams);
+$('#appPark').addEventListener('click', openParking);
+
+function openParking() {
+  openSheet(`<h2 class="sh-title" style="margin-bottom:12px">Para después</h2>
+    <div class="row"><input class="field" id="pkIn" placeholder="Algo que no quieres olvidar" maxlength="140"><button class="rbtn" id="pkAdd" style="width:56px;height:56px;background:var(--yel);color:#fff">${ic('plus')}</button></div>
+    <ul class="list" id="pkList" style="margin-top:10px"></ul>`);
+  const draw = () => {
+    const ul = $('#pkList'); ul.innerHTML = '';
+    if (!S.parking.length) ul.append(el('li', { style: 'color:var(--ink2);justify-content:center;border:0' }, 'Mente despejada'));
+    S.parking.forEach((it, i) => ul.append(el('li', { class: it.done ? 'done' : '' },
+      el('button', { class: 'ck' + (it.done ? ' on' : ''), html: ic('check'), onclick: () => { it.done = !it.done; save(); draw(); } }),
+      el('span', { class: 't' }, it.text),
+      el('button', { class: 'x', html: ic('x'), onclick: () => { const [gone] = S.parking.splice(i, 1); save(); draw(); toast('Borrado', 'neutral', () => { S.parking.splice(i, 0, gone); save(); if ($('#pkList')) draw(); }); } }))));
+  };
+  const add = () => { addParking($('#pkIn').value); $('#pkIn').value = ''; draw(); };
+  $('#pkAdd').onclick = add; $('#pkIn').onkeydown = e => { if (e.key === 'Enter') add(); };
+  draw(); sheetOnClose = renderHoy;
+}
+function addParking(text) { text = (text || '').trim(); if (!text) return; S.parking.unshift({ text, done: false, t: Date.now() }); S.parking = S.parking.slice(0, 40); save(); }
+
+/* ===================== EXÁMENES: plan espaciado hacia atrás ===================== */
+// Sesiones cortas repartidas antes del examen; la penúltima es un simulacro con tiempo
+// y la víspera es repaso ligero + dormir bien.
+const PLAN_OFFSETS = [[10, 'Repaso: hacer tarjetas del tema'], [7, 'Repaso espaciado'], [5, 'Repaso espaciado'], [3, 'Repaso mezclando temas'], [2, 'Simulacro con tiempo'], [1, 'Repaso ligero y dormir bien']];
+function examPlan(ex) {
+  const d = keyToNum(ex.date), t = dayNum();
+  return PLAN_OFFSETS.map(([off, label], i) => ({ i, day: d - off, label, exam: ex })).filter(p => p.day >= t - 0 || (ex.done || {})[p.i]);
+}
+function nextExam() {
+  const t = dayNum();
+  const list = S.exams.map(e => ({ ...e, left: keyToNum(e.date) - t })).filter(e => e.left >= 0).sort((a, b) => a.left - b.left);
+  return list[0] || null;
+}
+function examTasksToday() { const t = dayNum(); return S.exams.flatMap(e => examPlan(e).filter(p => p.day === t && !(e.done || {})[p.i])); }
+function openExams() {
+  const t = dayNum();
+  const list = S.exams.map(e => ({ ...e, left: keyToNum(e.date) - t })).sort((a, b) => a.left - b.left);
+  openSheet(`<h2 class="sh-title">Exámenes y entregas</h2><p class="sub" style="margin:0 0 14px">Agrega la fecha y Maple reparte repasos cortos en los días previos, en vez de dejarlo todo para la noche anterior.</p>
+    <div id="exList"></div>
+    <div class="tile" style="padding:14px"><input class="field" id="exName" placeholder="Materia (ej.: Cálculo diferencial)" maxlength="40"><div class="chips" id="exSug" style="padding-top:8px"></div><div class="gap"></div>
+    <div class="row"><input class="field grow" id="exDate" type="date"><button class="btn sm" id="exAdd" style="--acc:var(--lil);--accD:var(--lilD)">Agregar</button></div></div>`);
+  const box = $('#exList');
+  if (!list.length) box.append(el('p', { class: 'sub center', style: 'margin:4px 0 14px' }, 'Todavía no hay fechas.'));
+  list.forEach(e => box.append(el('button', { class: 'big-tile', onclick: () => openExam(e.id), html: `<div class="ic" style="background:${e.left < 0 ? '#CFC8C0' : 'var(--lil)'};font-family:Fredoka;font-size:20px">${e.left < 0 ? ic('check') : e.left}</div><div><b>${esc(e.name)}</b><small>${shortDate(keyToNum(e.date))} · ${e.left < 0 ? 'ya pasó' : e.left === 0 ? '¡es hoy!' : e.left === 1 ? 'mañana' : 'faltan ' + e.left + ' días'}</small></div>${ic('chev', 'margin-left:auto;color:#CFC8C0;font-size:22px')}` })));
+  migrateDecks(); const sg = $('#exSug'); S.decks.forEach(d => sg.append(el('button', { class: 'chip', onclick: () => { $('#exName').value = d.name; } }, d.name))); if (!S.decks.length) sg.remove();
+  const dIn = $('#exDate'); dIn.min = dayKey(); dIn.value = dayKey(new Date(Date.now() + 7 * 86400000));
+  $('#exAdd').onclick = () => {
+    const name = $('#exName').value.trim(), date = dIn.value;
+    if (!name || !date) { toast('Escribe la materia y la fecha', 'sorprendida'); return; }
+    const ex = { id: 'e' + Date.now(), name, date, done: {} }; S.exams.push(ex); save(); checkBadges(); openExam(ex.id); mHero.hop();
+  };
+  sheetOnClose = renderHoy;
+}
+function openExam(id) {
+  const ex = S.exams.find(e => e.id === id); if (!ex) return;
+  const t = dayNum(), left = keyToNum(ex.date) - t;
+  const p = examPlan(ex);
+  openSheet(`<div class="row"><h2 class="sh-title grow">${esc(ex.name)}</h2><span class="pill">${shortDate(keyToNum(ex.date))}</span></div>
+    <p class="sub" style="margin:0 0 14px">${left < 0 ? 'Este examen ya pasó. ¿Cómo te fue? Anota lo que harías distinto la próxima vez.' : left === 0 ? '¡Es hoy! Abre el kit antes de entrar.' : `Faltan ${left} día${left === 1 ? '' : 's'}. Toca un repaso para empezarlo.`}</p>
+    <div class="tile" style="padding:6px 14px"><ul class="list plan" id="exPlan"></ul></div>
+    <div class="gap"></div>${left === 0 ? `<button class="btn" id="exKit" style="--acc:var(--lil);--accD:var(--lilD)">${ic('bolt')}Abrir kit de examen</button>` : ''}
+    <button class="link" id="exDel" style="color:var(--red)">Eliminar fecha</button>`);
+  const ul = $('#exPlan');
+  if (!p.length) ul.append(el('li', { style: 'border:0;color:var(--ink2)' }, left <= 0 ? 'Sin repasos pendientes.' : 'El examen está muy cerca: haz un simulacro hoy y duerme bien.'));
+  p.forEach(s => {
+    const done = !!(ex.done || {})[s.i], isT = s.day === t;
+    ul.append(el('li', { class: (done ? 'done ' : '') + (isT ? 'today-row' : '') },
+      el('span', { class: 'when' }, isT ? 'HOY' : shortDate(s.day).split(' ').slice(0, 2).join(' ')),
+      el('button', { class: 't', style: 'text-align:left', onclick: () => { if (s.label.startsWith('Simulacro')) { plan.task = 'Simulacro de ' + ex.name + ' (sin apuntes, con tiempo)'; plan.focus = 45; plan.brk = 10; } else { plan.task = s.label + ' · ' + ex.name; } closeSheet(); show('foco'); renderPlan(); } }, s.label),
+      el('button', { class: 'ck' + (done ? ' on' : ''), html: ic('check'), onclick: () => { ex.done = ex.done || {}; ex.done[s.i] = !done; save(); if (!done) { sfx('ok'); } openExam(id); } })));
+  });
+  if ($('#exKit')) $('#exKit').onclick = openExamKit;
+  $('#exDel').onclick = () => { S.exams = S.exams.filter(e => e.id !== id); save(); openExams(); };
+  sheetOnClose = renderHoy;
+}
+
+/* ===================== ENFOCAR ===================== */
+const TASKS = ['Resolver ejercicios', 'Repasar apuntes con preguntas', 'Leer y resumir', 'Escribir un trabajo', 'Rehacer un examen viejo'];
+const IFS = ['lo anoto y vuelvo', 'respiro y releo la última línea', 'me paro 10 s y sigo'];
+const DURS = [[15, 5], [25, 5], [45, 10]];
+const RITUAL = [['phone', 'Celular lejos'], ['drop', 'Agua'], ['desk', 'Mesa limpia']];
+function renderPlan() {
+  steps('v-foco', 'f-plan');
+  $('#taskInput').value = plan.task;
+  const tc = $('#taskChips'); tc.innerHTML = '';
+  TASKS.forEach(t => tc.append(el('button', { class: 'chip' + (plan.task === t ? ' on' : ''), onclick: () => { plan.task = t; renderPlan(); } }, t)));
+  const ds = $('#durSeg'); ds.innerHTML = '';
+  DURS.forEach(([f, b]) => ds.append(el('button', { class: plan.focus === f ? 'on' : '', html: `${f}<small>min</small>`, onclick: () => { plan.focus = f; plan.brk = b; renderPlan(); } })));
+  const rl = $('#ritual'); rl.innerHTML = '';
+  RITUAL.forEach(([icn, t], i) => rl.append(el('button', { class: 'tog' + (S.ritual[i] ? ' on' : ''), html: ic(icn) + t, onclick: () => { S.ritual[i] = !S.ritual[i]; save(); renderPlan(); } })));
+  $('#ifTxt').textContent = IFS[S.ifthen || 0];
+}
+$('#taskInput').addEventListener('input', e => { plan.task = e.target.value; $$('#taskChips .chip').forEach(c => c.classList.toggle('on', c.textContent === plan.task)); });
+$('#ifBtn').addEventListener('click', () => { S.ifthen = ((S.ifthen || 0) + 1) % IFS.length; save(); $('#ifTxt').textContent = IFS[S.ifthen]; });
+
+let tick = null;
+function startRun(kind, seconds, extra = {}) {
+  S.run = Object.assign({ kind, total: seconds, endAt: Date.now() + seconds * 1000, paused: null, distract: 0, task: plan.task, focus: plan.focus, brk: plan.brk }, extra);
+  save(); resumeRun();
+}
+const remaining = () => { const r = S.run; if (!r) return 0; return Math.max(0, (r.endAt - (r.paused || Date.now())) / 1000); };
+function resumeRun() {
+  clearInterval(tick);
+  const r = S.run; if (!r) return;
+  show('foco');
+  if (r.kind === 'focus') {
+    steps('v-foco', 'f-run');
+    $('#runTask').textContent = r.task || 'Bloque de estudio';
+    $('#runSub').textContent = 'Si me distraigo, ' + IFS[S.ifthen || 0];
+    $('#distractN').textContent = r.distract; $('#distractN').classList.toggle('hide', !r.distract);
+    $('#pauseIc').innerHTML = `<use href="#i-${r.paused ? 'play' : 'pause'}"/>`; $('#pauseTxt').textContent = r.paused ? 'Seguir' : 'Pausa';
+    if (r.paused) { mRun.clear(); mRun.mode = 'pause'; mRun.src('front_blink'); } else mRun.idle();
+    mRun.img.style.opacity = r.paused ? .55 : 1;
+    const upd = () => {
+      const left = remaining();
+      $('#runTime').textContent = fmt(left);
+      document.title = (r.paused ? '⏸ ' : '') + fmt(left) + ' · Maple';
+      $('#ringArc').style.strokeDashoffset = (276.46 * (1 - left / r.total)).toFixed(2);
+      if (!r.paused) {
+        const frac = left / r.total;
+        if (!r.saidHalf && frac <= .5 && r.total >= 600) { r.saidHalf = true; coach(pick(['¡Vas por la mitad! Sigue así', 'Mitad del bloque. Lo estás logrando', '¡Ya llevas la mitad!'])); mRun.hop(); }
+        if (!r.saidEnd && left <= 60 && r.total >= 600) { r.saidEnd = true; coach('Último minuto. Cierra la idea en la que estás'); }
+      }
+      if (left <= 0 && !r.paused) finishFocus(true);
+    };
+    upd(); tick = setInterval(upd, 500);
+  } else startBreakView();
+}
+$('#btnStart').addEventListener('click', () => { audio(); if (!plan.task.trim()) plan.task = 'Bloque de estudio'; sfx('soft'); startRun('focus', plan.focus * 60); });
+$('#btnPause').addEventListener('click', () => { const r = S.run; if (!r) return; if (r.paused) { r.endAt += Date.now() - r.paused; r.paused = null; } else r.paused = Date.now(); save(); resumeRun(); });
+$('#btnStop').addEventListener('click', () => finishFocus(false));
+$('#btnDistract').addEventListener('click', () => {
+  const r = S.run; if (!r) return;
+  r.distract++; $('#distractN').textContent = r.distract; $('#distractN').classList.remove('hide'); save();
+  mRun.pose('emo_sorprendida', 'think', 700, 'a-hop', 650);
+  openSheet(`<h2 class="sh-title">¿Qué se te cruzó?</h2><p class="sub" style="margin:0 0 14px">Anótalo y vuelve. Te espera en “Para después”.</p>
+    <input class="field" id="dText" placeholder="Ej.: escribirle a mi mamá" maxlength="140"><div class="gap"></div>
+    <button class="btn" id="dSave" style="--acc:var(--yel);--accD:var(--yelD);color:#5A4410">Anotar y volver</button><button class="link" id="dSkip">Solo volver</button>`);
+  setTimeout(() => $('#dText').focus(), 60);
+  sheetOnClose = () => { if (S.run && !S.run.paused) mRun.idle(); };
+  $('#dSave').onclick = () => { addParking($('#dText').value); closeSheet(); toast('Anotado. ¡De vuelta al foco!', 'guino'.replace('guino', 'feliz')); };
+  $('#dSkip').onclick = closeSheet; $('#dText').onkeydown = e => { if (e.key === 'Enter') $('#dSave').click(); };
+});
+let breakAct = 'breath', breakMin = 5, rating = 0;
+function finishFocus(completed) {
+  clearInterval(tick); mRun.clear();
+  const r = S.run; if (!r) return;
+  const spent = Math.round((r.total - remaining()) / 60), d = today();
+  if (spent > 0) { d.min += spent; d.distract += r.distract; }
+  if (completed) d.blocks++;
+  d.log = d.log || []; if (spent > 0) d.log.push({ h: new Date(r.endAt - r.total * 1000).getHours(), dur: r.focus, spent, done: completed, dist: r.distract, rate: 0 });
+  document.title = 'Maple · Estudio en calma';
+  plan.task = r.task; plan.focus = r.focus; plan.brk = r.brk;
+  S.run = null; save();
+  const longB = completed && d.blocks % 4 === 0;
+  breakMin = longB ? 20 : plan.brk;
+  steps('v-foco', 'f-done');
+  $('#doneTitle').textContent = completed ? pick(['¡Bloque listo!', '¡Lo hiciste!', '¡Bien hecho!']) : 'Pausa merecida';
+  $('#doneSub').textContent = completed ? (longB ? `${d.blocks} bloques: toca un descanso largo` : `+${spent} min de foco`) : (spent ? `${spent} min también cuentan` : 'Parar también está bien');
+  $('#breakTitle').textContent = 'Descanso · ' + breakMin + ' min';
+  rating = 0; renderRating(); renderActs();
+  if (completed) { sfx('end'); confetti(); setTimeout(() => mDone.celebrate(), 150); } else mDone.pose('sit', null);
+  checkGoal(); checkBadges();
+}
+function renderRating() {
+  const c = $('#focusRating'); c.innerHTML = '';
+  [1, 2, 3, 4, 5].forEach(n => c.append(el('button', { class: rating === n ? 'on' : '', onclick: () => { const d = today(); if (!rating) d.focus.push(n); else d.focus[d.focus.length - 1] = n; rating = n; if (d.log && d.log.length) d.log[d.log.length - 1].rate = n; save(); renderRating(); n >= 4 ? mDone.hop() : mDone.talk(); toast(n >= 4 ? '¡Qué buena concentración!' : n === 3 ? 'Anotado. Vas bien' : 'Gracias por la honestidad. Probemos algo más corto', n >= 4 ? 'risa' : n === 3 ? 'feliz' : 'sad'); } }, String(n))));
+}
+const ACTS = [['breath', 'wind', 'Respirar'], ['move', 'walk', 'Moverme'], ['far', 'window', 'Mirar lejos'], ['water', 'drop', 'Agua'], ['eyes', 'eye', 'Ojos cerrados']];
+const STEPS = {
+  move: ['Ponte de pie y estira los brazos', 'Gira los hombros hacia atrás', 'Sube y baja unas escaleras o camina', 'Unas sentadillas suaves', 'Suelta la mandíbula y los hombros'],
+  far: ['Mira por la ventana, lo más lejos posible', 'Si hay verde o cielo, quédate ahí', 'Deja que la mirada vague', 'Parpadea lento'],
+  water: ['Ve por un vaso de agua', 'Si tienes hambre, algo ligero', 'Tómatelo lejos del escritorio', 'Vuelve sin prisa'],
+  eyes: ['Cierra los ojos', 'Suelta los hombros', 'Nota tu respiración', 'Deja pasar los pensamientos'],
+};
+function renderActs() {
+  const g = $('#acts'); g.innerHTML = '';
+  ACTS.forEach(([id, icn, n]) => g.append(el('button', { class: breakAct === id ? 'on' : '', onclick: () => { breakAct = id; renderActs(); }, html: `<div class="c">${ic(icn)}</div>${n}` })));
+}
+$('#btnBreak').addEventListener('click', () => startRun('break', breakMin * 60, { act: breakAct }));
+$('#btnSkipBreak').addEventListener('click', showNext);
+let breathT = null;
+function startBreakView() {
+  const r = S.run; steps('v-foco', 'f-break');
+  const a = ACTS.find(x => x[0] === r.act) || ACTS[0];
+  $('#brkName').textContent = a[2];
+  const isB = r.act === 'breath';
+  $('#brkBreath').classList.toggle('hide', !isB); $('#brkOther').classList.toggle('hide', isB);
+  mBrk.clear();
+  if (isB) { mBr.clear(); runBreathing($('#orb'), $('#breathTxt'), $('#brImg')); }
+  else if (r.act === 'move') mBrk.walk(true);
+  else if (r.act === 'eyes') mBrk.sleep();
+  else if (r.act === 'far') { mBrk.clear(); mBrk.src('profile'); mBrk.img.classList.add('alive'); }
+  else mBrk.idle();
+  const st = STEPS[r.act] || [];
+  const upd = () => {
+    const left = remaining(); $('#brkTime').textContent = fmt(left);
+    if (st.length) $('#brkStep').textContent = st[Math.min(st.length - 1, Math.floor((1 - left / r.total) * st.length))];
+    if (left <= 0) endBreak(true);
+  };
+  clearInterval(tick); upd(); tick = setInterval(upd, 500);
+}
+function runBreathing(orb, txt, img) {
+  clearTimeout(breathT);
+  // [texto, ms, escala del círculo, escala de Maple, cuadro]
+  const seq = [['Inhala por la nariz', 2000, 1.0, 'scale(1.03,1.05)', 'front'], ['Un poquito más', 1000, 1.12, 'scale(1.04,1.07)', 'front'], ['Exhala lento…', 5500, .55, 'scale(1,1)', 'front_blink']];
+  let i = 0;
+  if (img) { img.classList.remove('alive'); img.style.animation = 'none'; }
+  const step = () => {
+    const [t, ms, sc, ms2, fr] = seq[i]; txt.textContent = t; orb.style.transitionDuration = ms + 'ms'; orb.style.transform = 'scale(' + sc + ')';
+    if (img && img.isConnected) { img.style.transition = `transform ${ms}ms ease-in-out`; img.style.transform = ms2; img.src = 'img/hq/' + fr + '.webp'; }
+    i = (i + 1) % seq.length; breathT = setTimeout(step, ms);
+  };
+  step();
+}
+$('#btnEndBreak').addEventListener('click', () => endBreak(false));
+function endBreak(done) { clearInterval(tick); clearTimeout(breathT); mBr.clear(); mBrk.clear(); S.run = null; save(); if (done) sfx('brk'); showNext(); }
+function showNext() {
+  steps('v-foco', 'f-next');
+  const d = today(), f = d.focus, avg = f.length ? f.reduce((a, b) => a + b, 0) / f.length : 0;
+  $('#nextSay').textContent = d.blocks >= 6 ? 'Ya hiciste un montón' : (avg && avg < 2.5 ? '¿Probamos 15 min?' : '¿Vamos por otro?');
+  if (avg && avg < 2.5 && plan.focus > 15) { plan.focus = 15; plan.brk = 5; }
+  mNext.wave();
+}
+$('#btnAgain').addEventListener('click', () => { audio(); startRun('focus', plan.focus * 60); });
+$('#btnReplan').addEventListener('click', () => { plan.task = ''; renderPlan(); });
+$('#btnFinishDay').addEventListener('click', () => { toast(`Hoy: ${today().min} min de foco`); renderPlan(); show('hoy'); if (new Date().getHours() >= 18) setTimeout(openNight, 400); });
+
+/* ===================== REPASAR ===================== */
+const DECK = [
+  ['sol', '¿Qué es la molaridad (M)?', 'Moles de soluto por litro de solución (mol/L).'],
+  ['sol', '¿En qué se diferencia la molalidad de la molaridad?', 'La molalidad (m) es mol de soluto por kg de disolvente. No cambia con la temperatura porque no depende del volumen.'],
+  ['sol', 'Ecuación de dilución, y por qué funciona', 'C₁V₁ = C₂V₂. Al diluir, los moles de soluto se conservan; solo cambia el volumen.'],
+  ['sol', '¿Cuántos mL de HCl 2,0 M necesitas para 250 mL de HCl 0,10 M?', 'V₁ = (0,10 × 250) / 2,0 = 12,5 mL, y se afora a 250 mL.'],
+  ['sol', '¿Qué significa % m/v?', 'Gramos de soluto en 100 mL de solución.'],
+  ['sol', 'En soluciones acuosas diluidas, 1 ppm equivale aproximadamente a…', '1 mg de soluto por litro de solución (mg/L).'],
+  ['sol', '¿Qué es la normalidad?', 'Equivalentes por litro. N = M × n, donde n son los H⁺, OH⁻ o electrones intercambiados por fórmula.'],
+  ['sol', '¿Con qué material preparas una solución de concentración exacta?', 'Un matraz (balón) aforado o volumétrico, enrasando el menisco con la marca.'],
+  ['eq', 'Definición de pH y relación con pOH a 25 °C', 'pH = −log[H₃O⁺]. A 25 °C: pH + pOH = 14.'],
+  ['eq', 'pH de una solución de HCl 0,010 M', 'Ácido fuerte, disociación completa: [H₃O⁺] = 0,010 M → pH = 2,00.'],
+  ['eq', '¿Qué indica el valor de Ka?', 'La fuerza de un ácido débil: mayor Ka (menor pKa) → ácido más fuerte. pKa = −log Ka.'],
+  ['eq', 'Ecuación de Henderson–Hasselbalch', 'pH = pKa + log([A⁻]/[HA]).'],
+  ['eq', '¿Qué es un buffer y cuándo tiene máxima capacidad?', 'Mezcla de ácido débil y su base conjugada que resiste cambios de pH. Su capacidad es máxima cuando pH = pKa.'],
+  ['eq', '¿Qué es Kps y cuándo hay precipitación?', 'El producto de solubilidad de una sal poco soluble. Precipita cuando el producto iónico Q supera a Kps.'],
+  ['eq', 'Efecto del ion común', 'Agregar un ion que ya está en el equilibrio disminuye la solubilidad de la sal poco soluble.'],
+  ['eq', 'Principio de Le Châtelier', 'Si se perturba un sistema en equilibrio, este se desplaza para contrarrestar la perturbación.'],
+  ['vol', 'Punto de equivalencia vs. punto final', 'Equivalencia: cantidades estequiométricas (teórico). Punto final: donde cambia el indicador (observado). La diferencia es el error de titulación.'],
+  ['vol', '¿Qué características tiene un patrón primario?', 'Alta pureza, estable, no higroscópico, composición conocida y masa molar alta. Ej.: biftalato de potasio (KHP).'],
+  ['vol', '¿Qué es estandarizar una solución?', 'Determinar su concentración exacta titulándola contra un patrón primario (p. ej., NaOH contra KHP).'],
+  ['vol', 'Fenolftaleína: rango de viraje y colores', 'Aprox. pH 8,2–10: de incolora a rosada. Útil para titular ácidos con base fuerte.'],
+  ['vol', '25,00 mL de HCl gastan 20,00 mL de NaOH 0,1000 M. ¿[HCl]?', 'n(NaOH) = 20,00 mL × 0,1000 M = 2,000 mmol = n(HCl). [HCl] = 2,000 / 25,00 = 0,08000 M.'],
+  ['vol', '¿Qué es una valoración por retroceso?', 'Se añade un exceso conocido de reactivo al analito y luego se titula el exceso que no reaccionó.'],
+  ['vol', '¿Para qué se usa el EDTA?', 'Valoraciones complexométricas: forma complejos 1:1 con iones metálicos. Ej.: dureza del agua (Ca²⁺ y Mg²⁺).'],
+  ['err', 'Exactitud vs. precisión', 'Exactitud: cercanía al valor verdadero. Precisión: cercanía de las mediciones entre sí.'],
+  ['err', 'Error sistemático vs. aleatorio', 'Sistemático: siempre en la misma dirección, con causa identificable; afecta la exactitud. Aleatorio: fluctúa al azar; afecta la precisión.'],
+  ['err', 'Fórmula del error relativo porcentual', '(valor medido − valor verdadero) / valor verdadero × 100.'],
+  ['err', 'Cifras significativas al multiplicar y al sumar', 'Multiplicar/dividir: tantas cifras significativas como el dato con menos. Sumar/restar: tantos decimales como el dato con menos decimales.'],
+  ['err', '¿Para qué sirve la prueba Q de Dixon?', 'Para decidir si un valor sospechoso (atípico) puede descartarse de un conjunto pequeño de datos.'],
+  ['err', '¿Qué expresa la desviación estándar?', 'La dispersión de los datos alrededor de la media; a menor desviación, mayor precisión.'],
+  ['err', 'Pipeta volumétrica vs. graduada', 'La volumétrica entrega un volumen fijo con mayor exactitud; la graduada permite volúmenes variables con menos exactitud.'],
+  ['ins', 'Ley de Beer–Lambert', 'A = ε·b·c: la absorbancia es proporcional a la absortividad molar, el camino óptico y la concentración.'],
+  ['ins', 'Relación entre absorbancia y transmitancia', 'A = −log T (T como fracción, de 0 a 1).'],
+  ['ins', '¿Qué es una curva de calibración?', 'La respuesta del instrumento con patrones de concentración conocida; la concentración de la muestra se obtiene interpolando su señal.'],
+  ['ins', '¿Qué es un análisis gravimétrico?', 'Se determina el analito a partir de la masa de un producto (generalmente un precipitado) de composición conocida.'],
+];
+const SUB = { sol: 'Soluciones', eq: 'Equilibrio', vol: 'Volumetría', err: 'Errores', ins: 'Instrumental' };
+// Paquete universal: técnicas de estudio (útil para cualquier carrera)
+const LEARN = [
+  ['¿Qué rinde más que releer los apuntes?', 'Practicar recordando (autoevaluarte sin mirar) y repartir el estudio en varios días.'],
+  ['¿Qué es la práctica espaciada?', 'Repasar un tema en varias sesiones separadas por días, en vez de concentrarlo todo en una sola.'],
+  ['¿Qué es la práctica intercalada?', 'Mezclar tipos de problemas o temas en una misma sesión, en lugar de hacer todos los del mismo tipo seguidos.'],
+  ['¿Por qué releer da una falsa sensación de dominio?', 'Porque reconocer un texto se siente como saberlo, pero no es lo mismo que poder recordarlo sin mirar.'],
+  ['¿Qué es la autoexplicación?', 'Explicarte por qué funciona cada paso o idea mientras estudias, en vez de solo seguirlo.'],
+  ['¿Cada cuánto conviene un descanso?', 'Uno corto, de 5 a 10 minutos, entre bloques; y uno más largo después de varios bloques.'],
+  ['¿Por qué dormir bien ayuda a aprender?', 'Durante el sueño se consolida lo aprendido; dormir poco se asocia con peores notas.'],
+  ['¿Qué es un plan “si… entonces…”?', 'Decidir de antemano qué harás ante un obstáculo. Ej.: “Si me distraigo, entonces lo anoto y vuelvo”.'],
+  ['¿Qué hacer con una idea que te distrae mientras estudias?', 'Anotarla en una lista para después y volver a la tarea.'],
+  ['¿Qué ayuda antes de un examen si sientes ansiedad?', 'Escribir unos minutos sobre lo que te preocupa y ver los nervios como energía que prepara al cuerpo.'],
+];
+const PACKS = {
+  aprender: { name: 'Aprender a aprender', desc: '10 tarjetas sobre cómo estudiar mejor', cards: () => LEARN.map((c, i) => ({ id: 'a' + i, deck: 'pack:aprender', sub: 'Técnicas de estudio', q: c[0], a: c[1] })) },
+  quimica: { name: 'Química analítica', desc: '34 tarjetas de ejemplo: soluciones, equilibrio, volumetría…', cards: () => DECK.map((c, i) => ({ id: 'd' + i, deck: 'pack:quimica', sub: 'Química · ' + SUB[c[0]], q: c[1], a: c[2] })) },
+};
+const INTERVAL = [0, 1, 2, 4, 8, 16];
+function migrateDecks() {
+  if (!S.decks) S.decks = [];
+  if (!S.packs) S.packs = { aprender: true, quimica: Object.keys(S.cards || {}).some(k => k[0] === 'd') };
+  const orphan = S.custom.filter(c => !c.deck);
+  if (orphan.length) { let d = S.decks.find(x => x.id === 'mias'); if (!d) S.decks.push(d = { id: 'mias', name: 'Mis tarjetas' }); orphan.forEach(c => c.deck = 'mias'); }
+}
+const deckName = k => k.startsWith('pack:') ? PACKS[k.slice(5)].name : ((S.decks.find(d => d.id === k) || {}).name || 'Mis tarjetas');
+const allCards = () => Object.entries(PACKS).filter(([k]) => S.packs[k]).flatMap(([, p]) => p.cards())
+  .concat(S.custom.map(c => ({ id: c.id, deck: c.deck, sub: deckName(c.deck), q: c.q, a: c.a })));
+const cardState = id => S.cards[id] || { box: 0, due: 0 };
+const inDeck = (c, k) => k === 'all' || c.deck === k;
+const dueCards = k => { const n = dayNum(); return allCards().filter(c => inDeck(c, k) && cardState(c.id).due <= n); };
+let deck = 'all';
+function deckKeys() { return ['all', ...S.decks.map(d => d.id), ...Object.keys(PACKS).filter(k => S.packs[k]).map(k => 'pack:' + k)]; }
+function renderRepHome() {
+  migrateDecks(); session = null; steps('v-rep', 'r-home');
+  if (!deckKeys().includes(deck)) deck = 'all';
+  const dc = $('#deckChips'); dc.innerHTML = '';
+  deckKeys().forEach(k => dc.append(el('button', { class: 'chip' + (deck === k ? ' on' : ''), onclick: () => { deck = k; renderRepHome(); } }, k === 'all' ? 'Todo' : deckName(k))));
+  dc.append(el('button', { class: 'chip', style: 'background:transparent;box-shadow:inset 0 0 0 2px var(--line)', onclick: openDecks, html: ic('plus', 'vertical-align:-2px') + ' Materias' }));
+  const total = allCards().filter(c => inDeck(c, deck)).length, due = dueCards(deck).length;
+  $('#dueN').textContent = due;
+  $('#dueLbl').textContent = !total ? 'Crea tu primera tarjeta o activa un paquete' : due === 1 ? 'tarjeta para hoy' : due ? 'tarjetas para hoy' : '¡al día! puedes repasar igual';
+  $('#btnReview').classList.toggle('hide', !total);
+  const bx = $('#boxes'); bx.innerHTML = '';
+  const cnt = [0, 0, 0, 0, 0, 0]; allCards().filter(c => inDeck(c, deck)).forEach(c => cnt[Math.min(5, cardState(c.id).box)]++);
+  const mx = Math.max(1, ...cnt);
+  ['nueva', '1', '2', '3', '4', '5'].forEach((l, i) => bx.append(el('div', {}, el('i', { style: 'height:' + Math.round(6 + 28 * cnt[i] / mx) + 'px' }), l)));
+}
+/* Materias propias y paquetes de ejemplo */
+function openDecks() {
+  migrateDecks();
+  const draw = () => {
+    const box = $('#dkBody'); box.innerHTML = '';
+    const mine = el('div', { class: 'tile', style: 'padding:6px 14px' }); const ul = el('ul', { class: 'list' });
+    if (!S.decks.length) ul.append(el('li', { style: 'color:var(--ink2);border:0' }, 'Aún no tienes materias.'));
+    S.decks.forEach(d => { const n = S.custom.filter(c => c.deck === d.id).length;
+      ul.append(el('li', {}, el('span', { class: 't', html: `<b>${esc(d.name)}</b><small>${n} tarjeta${n === 1 ? '' : 's'}</small>` }),
+        el('button', { class: 'x', 'aria-label': 'Eliminar materia', html: ic('x'), onclick: e => { const b = e.currentTarget; if (!b.dataset.arm) { b.dataset.arm = 1; b.innerHTML = '<span style="font-size:12px;color:var(--red);font-weight:800">¿Borrar?</span>'; return; } S.decks = S.decks.filter(x => x.id !== d.id); S.custom = S.custom.filter(c => c.deck !== d.id); save(); draw(); } }))); });
+    mine.append(ul); box.append(el('div', { class: 'label' }, 'Mis materias'), mine);
+    const add = el('div', { class: 'row', style: 'margin-top:10px', html: `<input class="field grow" id="dkIn" placeholder="Nueva materia (ej.: Anatomía)" maxlength="30"><button class="rbtn" id="dkAdd" style="width:56px;height:56px;background:var(--blue);color:#fff">${ic('plus')}</button>` });
+    box.append(add, el('div', { class: 'gap2' }), el('div', { class: 'label' }, 'Paquetes listos'));
+    Object.entries(PACKS).forEach(([k, pk]) => box.append(el('button', { class: 'big-tile', onclick: () => { S.packs[k] = !S.packs[k]; save(); draw(); },
+      html: `<div class="ic" style="background:${S.packs[k] ? 'var(--mint)' : '#CFC8C0'}">${ic(S.packs[k] ? 'check' : 'plus')}</div><div><b>${pk.name}</b><small>${pk.desc}</small></div><span class="pill" style="margin-left:auto">${S.packs[k] ? 'Activo' : 'Añadir'}</span>` })));
+    const addDeck = () => { const v = $('#dkIn').value.trim(); if (!v) return; const d = { id: 'k' + Date.now(), name: v }; S.decks.push(d); save(); deck = d.id; draw(); toast('Materia creada'); };
+    $('#dkAdd').onclick = addDeck; $('#dkIn').onkeydown = e => { if (e.key === 'Enter') addDeck(); };
+  };
+  openSheet(`<h2 class="sh-title">Materias</h2><p class="sub" style="margin:0 0 14px">Organiza tus tarjetas por materia. Los paquetes son ejemplos listos para repasar.</p><div id="dkBody"></div>`);
+  draw(); sheetOnClose = renderRepHome;
+}
+$('#btnReview').addEventListener('click', () => {
+  let pool = dueCards(deck); if (!pool.length) pool = allCards().filter(c => inDeck(c, deck));
+  session = { cards: shuffle(pool).slice(0, 12), i: 0, ok: 0, conf: null, cal: { 0: [0, 0], 1: [0, 0], 2: [0, 0] } };
+  steps('v-rep', 'r-session'); showCard();
+});
+function showCard() {
+  const c = session.cards[session.i];
+  $('#flip').classList.remove('on');
+  setTimeout(() => { $('#rTag').textContent = c.sub; $('#rQ').textContent = c.q; $('#rA').textContent = c.a; }, session.i ? 180 : 0);
+  $('#rBar').style.width = (100 * session.i / session.cards.length) + '%';
+  $('#rConf').classList.remove('hide'); $('#rRateBox').classList.add('hide');
+}
+// Juicio de seguridad ANTES de ver la respuesta: entrena la calibración (saber lo que sabes).
+$$('#confBtns button').forEach(b => b.addEventListener('click', () => {
+  session.conf = +b.dataset.c; $('#flip').classList.add('on');
+  $('#rConf').classList.add('hide'); $('#rRateBox').classList.remove('hide');
+}));
+$$('#rRate button').forEach(b => b.addEventListener('click', () => {
+  const r = +b.dataset.r, c = session.cards[session.i], st = cardState(c.id);
+  const box = r === 0 ? 1 : r === 1 ? Math.max(1, st.box) : Math.min(5, st.box + 1);
+  S.cards[c.id] = { box, due: dayNum() + INTERVAL[box] };
+  const cf = session.conf ?? 1; session.cal[cf][0]++; S.calib[cf][0]++; if (r === 2) { session.cal[cf][1]++; S.calib[cf][1]++; }
+  if (r === 2) { session.ok++; sfx('ok'); session.streak = (session.streak || 0) + 1; } else { if (r === 0) sfx('no'); session.streak = 0; }
+  const fl = $('#flip'); fl.classList.remove('flash-ok', 'flash-no'); void fl.offsetWidth; fl.classList.add(r === 2 ? 'flash-ok' : r === 0 ? 'flash-no' : 'x'); setTimeout(() => fl.classList.remove('flash-ok', 'flash-no'), 500);
+  if ([3, 5, 8].includes(session.streak)) toast(`¡${session.streak} seguidas!`, 'risa');
+  else if (r === 0 && session.conf === 2) toast('Ojo: dijiste “la sé”. Vuelve más tarde', 'sorprendida');
+  today().cards++; save();
+  if (r === 0 && !c._again) session.cards.push(Object.assign({}, c, { _again: true }));
+  session.i++;
+  if (session.i >= session.cards.length) endSession(); else showCard();
+}));
+function endSession() {
+  steps('v-rep', 'r-end'); $('#rBar').style.width = '100%';
+  const n = session.cards.length, cal = session.cal;
+  $('#rEndTitle').textContent = session.ok >= n * .7 ? '¡Excelente!' : '¡Listo!';
+  $('#rEndSub').textContent = `${n} tarjetas. Las difíciles vuelven mañana; las fáciles, en unos días.`;
+  const [sn, sok] = cal[2];
+  let msg = 'Cuando dices “la sé” y aciertas, tu brújula funciona. Si fallas habiendo dicho “la sé”, repasa ese tema aunque “te suene”.';
+  if (sn >= 2 && sok / sn < .7) msg = `Dijiste “la sé” en ${sn} y acertaste ${sok}. Reconocer algo no es lo mismo que recordarlo: esas tarjetas vuelven pronto.`;
+  else if (sn >= 2) msg = `Dijiste “la sé” en ${sn} y acertaste ${sok}. ¡Tu sensación de “lo sé” es confiable!`;
+  $('#calibBox').innerHTML = `<div class="label">Tu brújula de “lo sé”</div><div class="calib">${[['Ni idea', 0], ['Creo que sí', 1], ['La sé', 2]].map(([l, k]) => `<div><b>${cal[k][0] ? cal[k][1] + '/' + cal[k][0] : '–'}</b><span>${l}</span></div>`).join('')}</div><p class="sub" style="margin:12px 2px 0;font-size:14px">${msg}</p>`;
+  session = null; sfx('end'); confetti(); setTimeout(() => mREnd.celebrate(), 150); checkGoal(); checkBadges();
+}
+$('#btnExitRev').addEventListener('click', renderRepHome);
+$('#btnRevBack').addEventListener('click', renderRepHome);
+$('#toolNew').addEventListener('click', () => {
+  migrateDecks();
+  let target = S.decks.some(d => d.id === deck) ? deck : (S.decks[0] || {}).id;
+  openSheet(`<h2 class="sh-title">Nueva tarjeta</h2><p class="sub" style="margin:0 0 12px">Escríbela como pregunta: te obliga a recordar, no solo a reconocer.</p>
+    <div class="label">Materia</div><div class="chips wrapc" id="nDeck" style="padding-top:0"></div><div class="gap"></div>
+    <input class="field" id="nq" placeholder="Pregunta" maxlength="200"><div class="gap"></div>
+    <textarea class="field" id="na" placeholder="Respuesta" style="min-height:110px" maxlength="400"></textarea><div class="gap"></div><button class="btn" id="nSave">Guardar</button>`);
+  const drawD = () => { const c = $('#nDeck'); c.innerHTML = '';
+    S.decks.forEach(d => c.append(el('button', { class: 'chip' + (target === d.id ? ' on' : ''), onclick: () => { target = d.id; drawD(); } }, d.name)));
+    const inp = el('input', { class: 'field', placeholder: '+ Nueva materia', maxlength: '30', style: 'padding:9px 14px;font-size:14px;width:170px;border-radius:999px' });
+    inp.onkeydown = e => { if (e.key === 'Enter' && inp.value.trim()) { const d = { id: 'k' + Date.now(), name: inp.value.trim() }; S.decks.push(d); target = d.id; save(); drawD(); } };
+    inp.onblur = () => { if (inp.value.trim()) inp.onkeydown({ key: 'Enter' }); };
+    c.append(inp); };
+  drawD();
+  $('#nSave').onclick = () => { const q = $('#nq').value.trim(), a = $('#na').value.trim(); if (!q || !a) { toast('Falta pregunta o respuesta', 'sorprendida'); return; }
+    if (!target) { const d = { id: 'mias', name: 'Mis tarjetas' }; if (!S.decks.some(x => x.id === 'mias')) S.decks.push(d); target = 'mias'; }
+    S.custom.push({ id: 'c' + Date.now(), deck: target, q, a }); save(); checkBadges(); deck = target; closeSheet(); toast('¡Guardada!'); renderRepHome(); };
+});
+/* Explícaselo a Maple: enseñar (en voz alta o por escrito) obliga a recuperar y organizar */
+const EXPLAIN_PROMPTS = ['Explícalo con tus palabras, como si yo no supiera nada del tema.', '¿Por qué funciona así? Dame la razón, no solo la regla.', 'Ponme un ejemplo concreto (con números si se puede).', '¿Qué error típico cometería alguien con este tema?', 'Resúmelo en una sola frase.'];
+$('#toolExplain').addEventListener('click', () => {
+  let i = 0, topic = '';
+  openSheet(`<div class="hero" style="margin-top:-6px"><div class="say" id="exSay" style="white-space:normal;width:86%;text-align:center;font-size:15px">¿Qué tema me vas a enseñar?</div><div class="plat"></div><div class="mw" id="exMw" style="margin-bottom:18px"><img id="exImg" src="img/hq/front.webp" alt="" style="height:120px"></div></div>
+    <div class="stepper" id="exStep">${EXPLAIN_PROMPTS.map(() => '<i></i>').join('')}</div>
+    <input class="field" id="exTopic" placeholder="Ej.: la fotosíntesis" maxlength="60">
+    <textarea class="field hide" id="exText" placeholder="Escribe o dilo en voz alta…" style="min-height:140px"></textarea>
+    <div class="gap"></div><button class="btn" id="exNext" style="--acc:var(--pink);--accD:var(--pinkD)">Empezar a explicar</button>`);
+  const m = new Maple($('#exMw'), $('#exImg')); m.idle();
+  const bar = () => $$('#exStep i').forEach((x, k) => x.classList.toggle('on', k < i));
+  $('#exNext').onclick = () => {
+    if (!topic) { topic = $('#exTopic').value.trim(); if (!topic) { toast('¿Qué tema?', 'sorprendida'); return; } $('#exTopic').classList.add('hide'); $('#exText').classList.remove('hide'); }
+    else { i++; $('#exText').value = ''; }
+    bar();
+    if (i >= EXPLAIN_PROMPTS.length) { S.explains.unshift({ topic, t: Date.now() }); S.explains = S.explains.slice(0, 20); save(); m.celebrate(); sfx('end'); $('#exSay').textContent = '¡Ahora sí entendí ' + topic + '! Si algo te costó explicarlo, ahí está lo que hay que repasar.'; $('#exText').classList.add('hide'); $('#exNext').textContent = 'Listo'; $('#exNext').onclick = closeSheet; return; }
+    $('#exSay').textContent = EXPLAIN_PROMPTS[i]; m.think(); setTimeout(() => m.idle(), 1400); $('#exNext').textContent = i === EXPLAIN_PROMPTS.length - 1 ? 'Terminar' : 'Siguiente';
+    setTimeout(() => $('#exText').focus(), 60);
+  };
+  sheetOnClose = () => m.clear();
+});
+/* Resolver paso a paso: autoexplicación guiada para problemas cuantitativos */
+const METHOD = [
+  ['Datos', '¿Qué te dan? Escribe cada dato con su unidad (mL, M, g…).'],
+  ['Incógnita', '¿Qué te piden exactamente y en qué unidades?'],
+  ['Idea clave', '¿Qué concepto, ley o principio aplica aquí? ¿A qué ejercicio que ya hiciste se parece?'],
+  ['Plan', 'Escribe la fórmula, regla o pasos antes de calcular o redactar.'],
+  ['Desarrollo', 'Resuélvelo paso a paso; si hay números, arrastra las unidades.'],
+  ['¿Tiene sentido?', '¿El orden de magnitud es lógico? ¿Las cifras significativas son correctas?'],
+  ['Explícalo', 'En una frase: ¿por qué este método y no otro?'],
+];
+$('#toolMethod').addEventListener('click', () => {
+  let i = 0;
+  const draw = () => {
+    const [t, d] = METHOD[i];
+    $('#mBody').innerHTML = `<div class="stepper">${METHOD.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div><div class="label">Paso ${i + 1} de ${METHOD.length}</div><h2 class="sh-title" style="margin-bottom:8px">${t}</h2><p class="sub" style="margin:0 0 16px;font-size:16px;color:var(--ink)">${d}</p>`;
+    $('#mNext').textContent = i === METHOD.length - 1 ? 'Terminar' : 'Siguiente'; $('#mPrev').style.visibility = i ? 'visible' : 'hidden';
+  };
+  openSheet(`<div id="mBody"></div><div class="callout" style="font-size:14px">Hazlo en tu cuaderno. Explicarte cada paso ayuda más que solo ver la solución.</div><div class="gap"></div>
+    <div class="row"><button class="btn soft sm" id="mPrev" style="width:auto">Atrás</button><button class="btn grow" id="mNext">Siguiente</button></div>`);
+  $('#mPrev').onclick = () => { i = Math.max(0, i - 1); draw(); };
+  $('#mNext').onclick = () => { if (i === METHOD.length - 1) { closeSheet(); toast('¡Problema resuelto con método!'); return; } i++; draw(); };
+  draw();
+});
+
+/* ===================== CALMA ===================== */
+function renderCalma() { $('#calmCycle').classList.toggle('hide', S.showCycle === false); $('#whySub').textContent = S.why ? S.why.slice(0, 60) + (S.why.length > 60 ? '…' : '') : '¿Para qué te sirve lo que estudias?'; }
+function openBreath(min) {
+  audio();
+  openSheet(`<div class="center"><div class="seg" id="bSeg" style="max-width:260px;margin:0 auto"></div></div>
+    <div class="breath"><div class="orb2"></div><div class="orb" id="sOrb"></div><div class="mw" id="sMw"><img id="sImg" src="img/hq/front.webp" alt=""></div></div>
+    <div class="btxt" id="sTxt"></div><div class="bigtime" id="sTime"></div>
+    <p class="sub center" style="font-size:13px">Dos inhalaciones por la nariz y una exhalación larga por la boca.</p>`);
+  const m = new Maple($('#sMw'), $('#sImg')); let end;
+  const start = x => { end = Date.now() + x * 60000; const s = $('#bSeg'); s.innerHTML = ''; [1, 3, 5].forEach(k => s.append(el('button', { class: k === x ? 'on' : '', html: `${k}<small>min</small>`, onclick: () => start(k) }))); };
+  start(min); runBreathing($('#sOrb'), $('#sTxt'), $('#sImg'));
+  const t = setInterval(() => { const l = (end - Date.now()) / 1000; $('#sTime').textContent = fmt(l); if (l <= 0) { sfx('brk'); closeSheet(); toast('¿Cómo te sientes ahora?'); } }, 300);
+  sheetOnClose = () => { clearInterval(t); clearTimeout(breathT); m.clear(); };
+}
+$('#calmBreath').addEventListener('click', () => openBreath(3));
+/* Kit de examen: 1) reinterpretar los nervios, 2) escribir la preocupación, 3) respirar */
+function openExamKit() {
+  let step = 0, t = null;
+  const draw = () => {
+    clearInterval(t);
+    const body = $('#kitBody');
+    $$('#kitStep i').forEach((x, k) => x.classList.toggle('on', k <= step));
+    if (step === 0) {
+      body.innerHTML = `<h2 class="sh-title">Los nervios trabajan para ti</h2><div class="callout lil">El corazón acelerado y la respiración rápida son tu cuerpo preparándose: llevan más oxígeno al cerebro. No tienes que calmarte del todo para que te vaya bien. Esa energía es combustible.</div><p class="sub" style="font-size:13px;margin:10px 4px 0">Pensar así los nervios ayudó a estudiantes a rendir mejor en exámenes de matemáticas.</p>`;
+      $('#kitNext').textContent = 'Siguiente';
+    } else if (step === 1) {
+      body.innerHTML = `<h2 class="sh-title">Vacía la preocupación</h2><p class="sub" style="margin:0 0 10px">Escribe sin filtro qué te preocupa del examen. Al terminar se borra; no se guarda.</p><textarea class="field" id="wText" placeholder="Lo que me preocupa es…"></textarea><div class="bigtime" id="wTime" style="font-size:28px">10:00</div>`;
+      const end = Date.now() + 600000; t = setInterval(() => { const l = (end - Date.now()) / 1000; const e = $('#wTime'); if (e) e.textContent = fmt(l); if (l <= 0) { clearInterval(t); sfx('brk'); } }, 500);
+      $('#kitNext').textContent = 'Soltarlo y seguir'; setTimeout(() => $('#wText') && $('#wText').focus(), 80);
+    } else if (step === 2) {
+      body.innerHTML = `<h2 class="sh-title">Un minuto de aire</h2><div class="breath" style="width:200px;height:200px"><div class="orb2"></div><div class="orb" id="kOrb"></div><div class="mw" id="kMw"><img id="kImg" src="img/hq/front.webp" alt="" style="width:80px"></div></div><div class="btxt" id="kTxt"></div>`;
+      runBreathing($('#kOrb'), $('#kTxt'), $('#kImg'));
+      $('#kitNext').textContent = '¡Vamos allá!';
+    } else { clearTimeout(breathT); closeSheet(); confetti(); toast('¡Ve por ese examen!'); mHero.celebrate(); }
+  };
+  openSheet(`<div class="stepper" id="kitStep"><i></i><i></i><i></i></div><div id="kitBody"></div><div class="gap"></div><button class="btn" id="kitNext" style="--acc:var(--lil);--accD:var(--lilD)">Siguiente</button>`);
+  $('#kitNext').onclick = () => { const w = $('#wText'); if (w) w.value = ''; step++; draw(); };
+  sheetOnClose = () => { clearInterval(t); clearTimeout(breathT); const w = $('#wText'); if (w) w.value = ''; };
+  draw();
+}
+$('#calmExam').addEventListener('click', openExamKit);
+$('#calmRestart').addEventListener('click', () => {
+  openSheet(`<div class="portrait sm"><img src="img/hq/p_guino.webp" alt=""></div>
+    <h2 class="center sh-title" style="margin-bottom:14px">Le pasa a todo el mundo</h2>
+    <div class="tile" style="padding:14px 18px"><ol style="margin:0;padding-left:20px;line-height:1.7;font-size:16px">
+      <li>Reconócelo, sin drama.</li><li>Trátate como tratarías a alguien que quieres.</li><li>Elige un paso de 2 minutos.</li></ol></div>
+    <div class="gap"></div><input class="field" id="tiny" placeholder="Ej.: abrir la guía de la práctica" maxlength="80">
+    <div class="gap"></div><button class="btn" id="tGo" style="--acc:var(--yel);--accD:var(--yelD);color:#5A4410">Solo 15 minutos</button>`);
+  $('#tGo').onclick = () => { plan.task = $('#tiny').value.trim() || 'Paso diminuto'; plan.focus = 15; plan.brk = 5; closeSheet(); startRun('focus', 900); };
+});
+/* Cerrar el día: lista concreta para mañana (descarga la mente) + hábitos + a dormir */
+const HABITS = [['move', 'walk', 'Me moví'], ['food', 'food', 'Comí bien'], ['people', 'people', 'Hablé con alguien'], ['rest', 'leaf', 'Tomé descansos']];
+function openNight() {
+  const d = today(), tomorrowKey = dayKey(new Date(Date.now() + 86400000));
+  const items = S.tomorrow.day === tomorrowKey ? S.tomorrow.items.map(i => i.text) : [];
+  openSheet(`<h2 class="sh-title">Cerrar el día</h2><p class="sub" style="margin:0 0 12px">Escribe lo que harás mañana, bien concreto. Sacarlo de la cabeza ayuda a dormirse más rápido.</p>
+    <div class="row"><input class="field" id="tmIn" placeholder="Mañana: terminar la tabla del informe" maxlength="100"><button class="rbtn" id="tmAdd" style="width:56px;height:56px;background:#5B6CC9;color:#fff">${ic('plus')}</button></div>
+    <ul class="list" id="tmList" style="margin:6px 0 10px"></ul>
+    <div class="label">Hoy…</div><div class="toggles" id="habits"></div>
+    <div class="gap"></div><button class="btn" id="tmDone" style="--acc:#5B6CC9;--accD:#4756A8">${ic('moon')}Buenas noches</button>`);
+  const draw = () => {
+    const ul = $('#tmList'); ul.innerHTML = '';
+    items.forEach((t, i) => ul.append(el('li', {}, el('span', { class: 't' }, t), el('button', { class: 'x', html: ic('x'), onclick: () => { items.splice(i, 1); draw(); } }))));
+    const hb = $('#habits'); hb.innerHTML = '';
+    HABITS.forEach(([k, icn, lab]) => hb.append(el('button', { class: 'tog' + (d.habits[k] ? ' on' : ''), style: d.habits[k] ? 'background:#5B6CC9' : '', html: ic(icn) + lab, onclick: () => { d.habits[k] = !d.habits[k]; save(); draw(); } })));
+  };
+  const add = () => { const v = $('#tmIn').value.trim(); if (v) items.push(v); $('#tmIn').value = ''; draw(); };
+  $('#tmAdd').onclick = add; $('#tmIn').onkeydown = e => { if (e.key === 'Enter') add(); };
+  $('#tmDone').onclick = () => {
+    add(); S.tomorrow = { day: tomorrowKey, items: items.map(text => ({ text, done: false })) }; save(); checkBadges();
+    $('#sheetBody').innerHTML = `<div class="hero" style="height:200px"><div class="plat"></div><div class="mw" id="nMw" style="bottom:18px"><img id="nImg" src="img/hq/sleep.webp" alt="" style="height:auto;width:230px"></div></div>
+      <h2 class="sh-title center">Hasta mañana</h2><p class="sub center">Pantallas fuera de la cama, luz baja. Dormir bien también es estudiar: el sueño fija lo que aprendiste hoy.</p>`;
+    new Maple($('#nMw'), $('#nImg')).sleep();
+  };
+  draw(); sheetOnClose = renderHoy;
+}
+function openCarry() {
+  openSheet(`<h2 class="sh-title" style="margin-bottom:12px">Lo que dejaste para hoy</h2><ul class="list" id="cyList"></ul>`);
+  const draw = () => { const ul = $('#cyList'); ul.innerHTML = ''; S.tomorrow.items.forEach(it => ul.append(el('li', { class: it.done ? 'done' : '' }, el('button', { class: 'ck' + (it.done ? ' on' : ''), html: ic('check'), onclick: () => { it.done = !it.done; save(); if (it.done) sfx('ok'); draw(); } }), el('button', { class: 't', style: 'text-align:left', onclick: () => { plan.task = it.text; closeSheet(); show('foco'); renderPlan(); } }, it.text)))); };
+  draw(); sheetOnClose = renderHoy;
+}
+$('#calmNight').addEventListener('click', openNight);
+/* Mi porqué: escribir la utilidad personal de lo que se estudia */
+function openWhy() {
+  openSheet(`<div class="portrait sm"><img src="img/hq/p_feliz.webp" alt=""></div><h2 class="sh-title center">Mi porqué</h2>
+    <p class="sub center" style="margin:4px 0 14px">¿Cómo se conecta lo que estudias con tu vida, tu futura profesión, tus metas o la gente que te importa? Escríbelo con tus palabras.</p>
+    <textarea class="field" id="whyT" placeholder="Me importa porque…" maxlength="600"></textarea><div class="gap"></div>
+    <button class="btn" id="whySave" style="--acc:var(--pink);--accD:var(--pinkD)">Guardar</button>`);
+  $('#whyT').value = S.why || '';
+  $('#whySave').onclick = () => { S.why = $('#whyT').value.trim(); save(); checkBadges(); closeSheet(); toast('Guardado. Te lo recordaré en días difíciles'); renderCalma(); };
+}
+$('#calmWhy').addEventListener('click', openWhy);
+$('#calmBelong').addEventListener('click', () => {
+  openSheet(`<div class="portrait sm"><img src="img/hq/p_pensativa.webp" alt=""></div><h2 class="sh-title center" style="margin-bottom:12px">No te pasa solo a ti</h2>
+    <div class="callout mint">Casi todos los estudiantes, en algún momento, se preguntan si de verdad “encajan” en la universidad o en su carrera. Un parcial malo o sentirse sola en un curso se siente como prueba de que no. Pero es una etapa común y suele pasar con el tiempo, a medida que haces amigos, conoces a tus profes y te acostumbras al ritmo.</div>
+    <div class="gap"></div><div class="label">Cosas pequeñas que ayudan</div>
+    <div class="tile" style="padding:6px 16px"><ul class="list">
+      <li>${ic('chat', 'color:var(--blue);font-size:22px')}<span class="t">Ir a la hora de atención de un profe, aunque sea con una sola duda</span></li>
+      <li>${ic('people', 'color:var(--blue);font-size:22px')}<span class="t">Estudiar con alguien y explicarse los temas por turnos</span></li>
+      <li>${ic('star', 'color:var(--blue);font-size:22px')}<span class="t">Preguntar por monitorías o tutorías de tu facultad</span></li></ul></div>`);
+});
+$('#calmHelp').addEventListener('click', openHelp);
+function openHelp() {
+  const h = S.help || {};
+  openSheet(`<h2 class="sh-title">Apoyo y ayuda</h2><p class="sub" style="margin:0 0 14px">Pedir ayuda a tiempo es una habilidad de estudio, no una debilidad.</p>
+    <div class="label">En tu universidad</div>
+    <div class="tile" style="padding:14px"><p class="sub" style="margin:0 0 10px;font-size:14px">Guarda el contacto de bienestar universitario (psicología, permanencia, monitorías) para tenerlo a mano.</p>
+      <input class="field" id="hName" placeholder="Ej.: Bienestar Universitario" maxlength="60"><div class="gap"></div>
+      <div class="row"><input class="field grow" id="hPhone" placeholder="Teléfono o extensión" maxlength="40" inputmode="tel"><button class="btn sm" id="hSave">Guardar</button></div>
+      <div id="hShow"></div></div>
+    <div class="gap"></div><div class="label">Salud mental · Colombia, gratuito</div>
+    <a class="phone" href="tel:192"><div class="ic">${ic('call')}</div><div><b>192, opción 4</b><small>Línea nacional del Ministerio de Salud: orientación psicológica</small></div></a>
+    <a class="phone" href="tel:106"><div class="ic" style="background:var(--blue)">${ic('call')}</div><div><b>106</b><small>Bogotá y otras regiones: escucha y apoyo psicológico, 24 horas</small></div></a>
+    <a class="phone" href="tel:123"><div class="ic" style="background:var(--red)">${ic('call')}</div><div><b>123</b><small>Emergencias: si tú o alguien está en peligro</small></div></a>
+    <p class="foot" style="margin-top:8px">Si te sientes muy mal por varios días, si no puedes dormir o tienes pensamientos de hacerte daño, habla hoy con alguien de confianza o llama a una de estas líneas.</p>`);
+  $('#hName').value = h.name || ''; $('#hPhone').value = h.phone || '';
+  const drawH = () => { const p = (S.help.phone || '').replace(/[^0-9+]/g, ''); $('#hShow').innerHTML = S.help.phone ? `<div class="gap"></div><a class="phone" href="tel:${p}" style="box-shadow:none;background:var(--soft);margin:0"><div class="ic" style="background:var(--lil)">${ic('call')}</div><div><b>${esc(S.help.name || 'Bienestar')}</b><small>${esc(S.help.phone)}</small></div></a>` : ''; };
+  $('#hSave').onclick = () => { S.help = { name: $('#hName').value.trim(), phone: $('#hPhone').value.trim() }; save(); drawH(); toast('Guardado'); };
+  drawH();
+}
+
+
+/* ===================== EMOCIONES ===================== */
+// Nombrar la emoción (y su intensidad) ya ayuda a regularla; luego, una herramienta para cada una.
+const EMOS = {
+  enojo: { label: 'Enojo', img: 'emo_molesta', pe: 'molesta', color: '#FF5B4D', glow: 'rgba(255,91,77,.38)', fx: 'steam', anim: 'a-angry',
+    intro: 'El enojo avisa que algo te pareció injusto o te bloqueó. Es válido sentirlo; lo importante es qué haces con él.',
+    steps: ['Ponle nombre: “Siento enojo, nivel X”. Solo eso ya baja un poco la intensidad.', 'Enfría el cuerpo: tres suspiros con exhalación larga.', 'Aléjate 10 minutos de la situación, del chat o de la persona.', 'Mueve el cuerpo pensando en otra cosa: caminar, estirarte, agua fría en las manos.', 'Cuando baje, decide con calma qué quieres decir o hacer.'],
+    note: 'Ojo: golpear cojines, gritar o repasar una y otra vez lo que pasó suele aumentar el enojo en vez de soltarlo.', action: ['Enfriar con Maple', 'cool'] },
+  tristeza: { label: 'Tristeza', img: 'emo_sad', pe: 'sad', color: '#46A7F5', glow: 'rgba(70,167,245,.28)', fx: 'rain', anim: 'a-droop',
+    intro: 'La tristeza pide pausa y compañía. No hay que “arreglarla” de inmediato.',
+    steps: ['Nómbrala sin juzgarte: “Hoy estoy triste, y está bien”.', 'Háblate como le hablarías a alguien que quieres, en tu lugar.', 'Escríbele o llama a alguien de confianza, aunque sea para decir hola.', 'Sal a caminar 10 minutos, si puedes con luz natural.', 'Baja la exigencia de hoy: un bloque corto cuenta.'],
+    note: 'Si la tristeza dura más de dos semanas, te quita el sueño o las ganas de todo, busca ayuda profesional.', action: ['Ver apoyo y líneas', 'help'] },
+  ansiedad: { label: 'Ansiedad', img: 'emo_asustada', pe: 'asustada', color: '#9C8CF2', glow: 'rgba(156,140,242,.32)', fx: 'sweat', anim: 'a-tremble',
+    intro: 'La ansiedad es tu alarma interna preparándote para algo. Es incómoda, pero no es peligrosa y pasa.',
+    steps: ['Nómbrala: “Siento ansiedad, nivel X”.', 'Respira con exhalación larga: dos inhalaciones por la nariz y una exhalación lenta.', 'Vuelve al presente con 5-4-3-2-1: 5 cosas que ves, 4 que tocas, 3 que oyes, 2 que hueles, 1 que saboreas.', 'Si es por un examen, recuerda: esa energía también te ayuda a rendir.', 'Elige un paso pequeño y concreto que sí puedes hacer ahora.'],
+    note: 'Si la ansiedad es muy frecuente o te paraliza, habla con bienestar universitario o con un profesional.', action: ['Hacer 5-4-3-2-1', 'ground'] },
+  cansancio: { label: 'Cansancio', img: 'emo_tired', pe: 'tired', color: '#5B6CC9', glow: 'rgba(91,108,201,.25)', fx: 'zz', anim: 'alive',
+    intro: 'El cansancio también es información: tu cerebro necesita recargar para poder aprender.',
+    steps: ['Revisa cuánto dormiste anoche.', 'Si puedes, una siesta corta de menos de 30 minutos.', 'Toma agua y come algo.', 'Hoy, bloques de 15 minutos con tareas fáciles.', 'Esta noche, cierra el día temprano.'],
+    note: 'Si el cansancio no se va aunque duermas bien, o viene con periodos muy abundantes, consúltalo.', action: ['Cerrar el día', 'night'] },
+  alegria: { label: 'Alegría', img: 'emo_risa', pe: 'risa', color: '#FFC53D', glow: 'rgba(255,197,61,.35)', fx: 'spark', anim: 'a-bounce',
+    intro: '¡Qué bien! Vale la pena saborearlo un momento.',
+    steps: ['Detente 20 segundos a notar qué se siente.', '¿Qué salió bien? Escríbelo o cuéntaselo a alguien.', 'Aprovecha la energía para lo que más te cuesta.'],
+    note: '', action: ['Enfocar ahora', 'focus'] },
+  calma: { label: 'Calma', img: 'front_blink', pe: 'blink', color: '#2FC79B', glow: 'rgba(47,199,155,.25)', fx: 'leaf', anim: 'a-sway',
+    intro: 'Estar en calma es un buen punto de partida para estudiar.',
+    steps: ['Nota qué te ayudó a llegar aquí, para repetirlo.', 'Es buen momento para un bloque de foco o para repasar.'],
+    note: '', action: ['Enfocar ahora', 'focus'] },
+};
+['emo_molesta', 'emo_sad', 'emo_asustada', 'emo_sorprendida', 'emo_risa', 'emo_feliz', 'emo_tired'].forEach(n => { new Image().src = 'img/hq/' + n + '.webp'; });
+function fxHTML(kind, k = 1) {
+  if (kind === 'steam') return '<div class="fx steam"><i></i><i></i><i></i><i></i></div>';
+  if (kind === 'rain') return '<div class="fx rain"><div class="cloud"></div>' + Array.from({ length: 6 }, (_, i) => `<i style="left:${38 + i * 4.5}%;animation-delay:${(i * .17).toFixed(2)}s"></i>`).join('') + '</div>';
+  if (kind === 'sweat') return '<div class="fx"><div class="sweat"></div></div>';
+  if (kind === 'spark') return '<div class="fx spark">' + [[22, 20], [74, 16], [30, 50], [70, 46], [50, 6]].map(([x, y], i) => `<i style="left:${x}%;top:${y}%;animation-delay:${i * .3}s">✦</i>`).join('') + '</div>';
+  if (kind === 'leaf') return '<div class="fx leaf">' + [15, 35, 60, 80].map((x, i) => `<i style="left:${x}%;animation-delay:${i * 1.4}s"></i>`).join('') + '</div>';
+  if (kind === 'zz') return '<div class="zz" style="top:20%;right:30%"><span>z</span><span>z</span><span>Z</span></div>';
+  return '';
+}
+function emoStage(box, key, level = 3) {
+  const e = EMOS[key];
+  const speed = 1.6 - level * .2; // más intensidad, efecto más rápido
+  box.innerHTML = `<div class="emo-glow" style="--gc:${e.glow};opacity:${.35 + level * .13}"></div>${fxHTML(e.fx)}<div class="plat"></div><div class="mw ${e.anim === 'alive' ? '' : e.anim}" style="animation-duration:${e.anim === 'a-angry' || e.anim === 'a-tremble' ? (e.anim === 'a-angry' ? .62 - level * .06 : .24 - level * .02) + 's' : ''}"><img src="img/hq/${e.img}.webp" alt="Maple con ${e.label.toLowerCase()}" class="${e.anim === 'alive' || e.anim === 'a-droop' ? 'alive' : ''}"></div>`;
+  box.querySelectorAll('.steam i,.rain i').forEach(i => i.style.animationDuration = Math.max(.6, speed) + 's');
+}
+function openFeel() {
+  openSheet(`<h2 class="sh-title">¿Cómo te sientes?</h2><p class="sub" style="margin:0 0 14px">Elige lo que más se parezca. Ponerle nombre a una emoción ya ayuda a bajarle intensidad.</p>
+    <div class="emo-grid" id="emoGrid"></div>`);
+  const g = $('#emoGrid');
+  Object.entries(EMOS).forEach(([k, e]) => g.append(el('button', { onclick: () => feelStep(k), html: `<img src="img/hq/pe_${e.pe}.webp" alt="">${e.label}` })));
+}
+function feelStep(key) {
+  const e = EMOS[key]; let level = 3;
+  openSheet(`<div class="emo-stage" id="emoStage"></div>
+    <div class="row" style="margin-bottom:8px"><h2 class="sh-title grow" style="margin:0">${e.label}</h2><span class="pill" id="lvTxt">nivel 3 de 5</span></div>
+    <div class="dots5" id="lvDots" style="--ec:${e.color}"></div>
+    <p class="sub" style="margin:14px 2px">${e.intro}</p>
+    <ol class="list steps-card" style="padding:6px 16px">${e.steps.map((t, i) => `<li><b class="n">${i + 1}</b><span>${t}</span></li>`).join('')}</ol>
+    ${e.note ? `<div class="gap"></div><div class="callout" style="font-size:14px">${e.note}</div>` : ''}
+    <div class="gap"></div><button class="btn" id="emoAct" style="--acc:${e.color};--accD:${e.color};filter:saturate(1.05)">${e.action[0]}</button>
+    <button class="link" id="emoSave">Guardar y cerrar</button>`);
+  const draw = () => { emoStage($('#emoStage'), key, level); $('#lvTxt').textContent = `nivel ${level} de 5`; const d = $('#lvDots'); d.innerHTML = ''; [1, 2, 3, 4, 5].forEach(n => d.append(el('button', { class: n <= level ? 'on' : '', 'aria-label': 'nivel ' + n, onclick: () => { level = n; draw(); } }))); };
+  draw();
+  const log = () => { const d = today(); d.moods = d.moods || []; d.moods.push({ e: key, l: level, t: Date.now() }); save(); checkBadges(); };
+  $('#emoSave').onclick = () => { log(); closeSheet(); toast('Anotado. Gracias por escucharte', EMOS[key].pe); };
+  $('#emoAct').onclick = () => {
+    log(); const a = e.action[1];
+    if (a === 'cool') return coolDown(level);
+    if (a === 'ground') return grounding();
+    if (a === 'help') return openHelp();
+    if (a === 'night') return openNight();
+    if (a === 'focus') { closeSheet(); show('foco'); renderPlan(); }
+  };
+}
+/* Enfriar el enojo: Maple pasa de roja a azul mientras respira */
+function coolDown(level) {
+  let n = 0; const total = 3;
+  openSheet(`<div class="emo-stage" id="coolStage"></div><div class="btxt" id="coolTxt">Respiremos</div><p class="sub center" id="coolSub" style="font-size:13px">Suspiro ${n + 1} de ${total}</p>`);
+  const st = $('#coolStage'); emoStage(st, 'enojo', level);
+  const glow = st.querySelector('.emo-glow'), mw = st.querySelector('.mw'), img = st.querySelector('img'), fx = st.querySelector('.fx');
+  const seq = [['Inhala por la nariz', 2000], ['Un poquito más', 1000], ['Exhala lento por la boca…', 5500]];
+  let i = 0, t;
+  const step = () => {
+    if (!$('#coolTxt')) return;
+    const [txt, ms] = seq[i]; $('#coolTxt').textContent = txt;
+    if (i === 2) { n++; const k = n / total;
+      glow.style.setProperty('--gc', `rgba(${Math.round(255 - 185 * k)},${Math.round(91 + 76 * k)},${Math.round(77 + 168 * k)},.32)`);
+      mw.style.animationDuration = (.6 + k * 1.6) + 's'; if (fx) fx.style.opacity = 1 - k;
+      if (n === 2) img.src = 'img/hq/front.webp';
+    }
+    i = (i + 1) % 3;
+    if (n >= total && i === 0) {
+      mw.className = 'mw a-sway'; mw.style.animationDuration = ''; img.src = 'img/hq/front_blink.webp'; if (fx) fx.remove();
+      glow.style.setProperty('--gc', 'rgba(70,167,245,.28)');
+      $('#coolTxt').textContent = 'Bajó la temperatura'; $('#coolSub').innerHTML = '¿Cómo quedó tu enojo? Si sigue alto, repite o aléjate un rato más.<div class="gap"></div>';
+      $('#coolSub').append(el('button', { class: 'btn', style: '--acc:var(--blue);--accD:var(--blueD)', onclick: () => closeSheet() }, 'Listo'));
+      sfx('brk'); return;
+    }
+    $('#coolSub').textContent = `Suspiro ${Math.min(n + 1, total)} de ${total}`;
+    t = setTimeout(step, ms);
+  };
+  step(); sheetOnClose = () => clearTimeout(t);
+}
+/* 5-4-3-2-1 para la ansiedad */
+function grounding() {
+  const G = [[5, 'cosas que puedes VER', 'window'], [4, 'cosas que puedes TOCAR', 'heart'], [3, 'sonidos que puedes OÍR', 'chat'], [2, 'olores que puedes OLER', 'leaf'], [1, 'sabor que puedes SENTIR', 'drop']];
+  let i = 0;
+  openSheet(`<div class="emo-stage" id="grStage" style="height:200px"></div><div class="stepper" id="grStep">${G.map(() => '<i></i>').join('')}</div><div id="grBody" class="center"></div><div class="gap"></div><button class="btn" id="grNext" style="--acc:var(--lil);--accD:var(--lilD)">Listo</button>`);
+  const st = $('#grStage');
+  const draw = () => {
+    $$('#grStep i').forEach((x, k) => x.classList.toggle('on', k <= i));
+    const k = i / (G.length - 1);
+    if (i < 2) emoStage(st, 'ansiedad', 3 - i); else if (i < 4) { emoStage(st, 'calma', 2); st.querySelector('img').src = 'img/hq/front.webp'; } else emoStage(st, 'calma', 2);
+    const [n, t, icn] = G[i];
+    $('#grBody').innerHTML = `<div style="font-family:Fredoka;font-weight:600;font-size:64px;line-height:1;color:var(--lil)">${n}</div><h2 class="sh-title" style="margin-top:6px">${t}</h2><p class="sub">Nómbralas en voz baja, sin prisa.</p>`;
+    $('#grNext').textContent = i === G.length - 1 ? 'Terminar' : 'Listo, siguiente';
+  };
+  $('#grNext').onclick = () => { if (i === G.length - 1) { closeSheet(); toast('Bien. Aquí estás, en el presente'); return; } i++; draw(); };
+  draw();
+}
+$('#calmFeel').addEventListener('click', openFeel);
+
+/* ===================== MI CICLO Y SALUD ===================== */
+// Registro privado de periodo y síntomas. Las fechas probables son aproximadas.
+const SX = [['colicos', 'Cólicos'], ['cabeza', 'Dolor de cabeza'], ['cansancio', 'Cansancio'], ['hinchazon', 'Hinchazón'], ['animo', 'Ánimo bajo'], ['irrita', 'Irritabilidad'], ['ansiedad', 'Ansiedad'], ['sueno', 'Mal sueño']];
+const FLOW = ['Nada', 'Ligero', 'Medio', 'Abundante'];
+function cyc() { if (!S.cycle) S.cycle = { log: {} }; return S.cycle; }
+function cycleStats() {
+  const log = cyc().log; const days = Object.keys(log).filter(k => (log[k].flow || 0) > 0).map(keyToNum).sort((a, b) => a - b);
+  const starts = days.filter(n => !days.includes(n - 1));
+  const lens = []; for (let i = 1; i < starts.length; i++) { const L = starts[i] - starts[i - 1]; if (L >= 18 && L <= 50) lens.push(L); }
+  const recent = lens.slice(-6);
+  const avg = recent.length ? Math.round(recent.reduce((a, b) => a + b, 0) / recent.length) : 28;
+  const durs = starts.map(st => { let d = 0; while (days.includes(st + d)) d++; return d; });
+  const pdur = durs.length ? Math.round(durs.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, durs.length)) : 5;
+  const last = starts[starts.length - 1]; const t = dayNum();
+  return { starts, avg, pdur: Math.max(2, Math.min(8, pdur)), last, cycleDay: last != null ? t - last + 1 : null, next: last != null ? last + avg : null, nCycles: lens.length, irregular: recent.length >= 3 && Math.max(...recent) - Math.min(...recent) > 9 };
+}
+function openCycle(selKey) {
+  const c = cyc(), st = cycleStats(), t = dayNum();
+  let sel = selKey ? keyToNum(selKey) : t;
+  const draw = () => {
+    const st = cycleStats();
+    const head = st.last == null
+      ? `<div class="cyc-head"><div class="portrait sm" style="margin:0">${'<img src="img/hq/p_feliz.webp" alt="">'}</div><div><b class="f" style="font-size:18px">Empieza registrando tu periodo</b><p class="sub" style="margin:4px 0 0;font-size:13px">Toca el día en que empezó y marca el flujo. Con dos o más periodos, Maple estima el siguiente.</p></div></div>`
+      : (() => { const left = st.next - t; const pct = Math.min(1, st.cycleDay / st.avg);
+          return `<div class="cyc-head"><div class="cyc-ring"><svg viewBox="0 0 100 100" style="transform:rotate(-90deg)"><circle cx="50" cy="50" r="42" fill="none" stroke="#FCE3E7" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="#E85A7E" stroke-width="10" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="${(263.9 * (1 - pct)).toFixed(1)}"/></svg><b>${st.cycleDay}<small>día</small></b></div>
+          <div><b class="f" style="font-size:18px">${left > 1 ? `Próximo periodo en ~${left} días` : left >= -1 ? 'Tu periodo podría llegar estos días' : 'Tu periodo viene con retraso'}</b><p class="sub" style="margin:4px 0 0;font-size:13px">${st.nCycles ? `Ciclo promedio: ${st.avg} días` : 'Estimación con 28 días hasta tener más datos'}${st.irregular ? ' · ciclos variables' : ''}. Es una estimación, no un método anticonceptivo.</p></div></div>`; })();
+    // calendario: 5 semanas pasadas + 2 futuras, desde lunes
+    const d0 = numToDate(t); const dow = (d0.getDay() + 6) % 7; const start = t - dow - 28; const end = start + 7 * 7 - 1;
+    const predicted = new Set(); if (st.next != null) { for (let k = 0; k < st.pdur; k++) predicted.add(st.next + k); if (st.next + st.avg <= end) for (let k = 0; k < st.pdur; k++) predicted.add(st.next + st.avg + k); }
+    let cal = ['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(h => `<div class="h">${h}</div>`).join('');
+    for (let n = start; n <= end; n++) {
+      const k = dayKey(numToDate(n)), e = c.log[k] || {}, moods = (S.days[k] || {}).moods || [];
+      const cls = [(e.flow >= 2 ? 'per' : e.flow === 1 ? 'per1' : (predicted.has(n) && n >= t ? 'pred' : '')), n === t ? 'today' : '', n === sel ? 'sel' : '', n > t ? 'fut' : ''].join(' ');
+      const dot = (e.sx && e.sx.length) || e.pain ? '<i style="background:#E85A7E"></i>' : moods.length ? `<i style="background:${EMOS[moods[moods.length - 1].e].color}"></i>` : '';
+      cal += `<button class="${cls}" data-n="${n}">${numToDate(n).getDate()}${dot}</button>`;
+    }
+    const sk = dayKey(numToDate(sel)), se = c.log[sk] || {};
+    const editor = sel > t ? `<p class="sub center" style="margin:8px 0 0;font-size:13px">No se puede registrar un día futuro.</p>` : `
+      <div class="label" style="margin-top:4px">${sel === t ? 'Hoy' : shortDate(sel)} · flujo</div><div class="seg" id="flSeg"></div>
+      <div class="gap"></div><div class="label">Dolor</div><div class="seg" id="pnSeg"></div>
+      <div class="gap"></div><div class="label">Síntomas</div><div class="chips wrapc" id="sxChips" style="padding-top:0"></div>`;
+    $('#cycBody').innerHTML = `<div class="tile">${head}</div><div class="gap"></div><div class="tile" style="padding:14px"><div class="cal" id="cal">${cal}</div>
+      <div class="row" style="justify-content:center;gap:14px;margin-top:10px;font-size:11px;font-weight:800;color:var(--ink2)"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--red);vertical-align:-1px"></i> periodo</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;box-shadow:inset 0 0 0 2px #FFB1A9;vertical-align:-1px"></i> probable</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#E85A7E"></i> síntomas</span></div>
+      <div class="gap"></div>${editor}</div>`;
+    $$('#cal button').forEach(b => b.onclick = () => { sel = +b.dataset.n; draw(); });
+    if (sel <= t) {
+      const set = (f, v) => { c.log[sk] = Object.assign({}, c.log[sk] || {}, { [f]: v }); if (!c.log[sk].flow && !c.log[sk].pain && !(c.log[sk].sx || []).length) delete c.log[sk]; save(); draw(); };
+      const fs = $('#flSeg'); FLOW.forEach((l, i) => fs.append(el('button', { class: (se.flow || 0) === i ? 'on' : '', style: 'font-size:13px', onclick: () => set('flow', i) }, l)));
+      const ps = $('#pnSeg'); ['Nada', 'Leve', 'Moderado', 'Fuerte'].forEach((l, i) => ps.append(el('button', { class: (se.pain || 0) === i ? 'on' : '', style: 'font-size:13px', onclick: () => set('pain', i) }, l)));
+      const sc = $('#sxChips'); SX.forEach(([k, l]) => { const on = (se.sx || []).includes(k); sc.append(el('button', { class: 'chip' + (on ? ' on' : ''), style: on ? 'background:#E85A7E' : '', onclick: () => { const a = new Set(se.sx || []); on ? a.delete(k) : a.add(k); set('sx', [...a]); } }, l)); });
+    }
+  };
+  openSheet(`<h2 class="sh-title">Mi ciclo y salud</h2><p class="sub" style="margin:0 0 14px">Solo tú ves esto: se guarda en tu dispositivo y en tu cuenta.</p>
+    <div id="cycBody"></div><div class="gap"></div>
+    <details class="acc"><summary><span class="ic" style="background:#E85A7E">${ic('heart')}</span>Si hay dolor</summary><div class="body">
+      <ul><li><b>Calor local:</b> bolsa de agua tibia o compresa caliente en el abdomen o la espalda baja.</li><li><b>Moverte:</b> el ejercicio regular durante el mes (caminar, yoga, estiramientos) es de lo que más ayuda.</li><li><b>Analgésicos de venta libre:</b> pregunta en la farmacia o a tu médico cuál te sirve y cómo tomarlo; suelen funcionar mejor si empiezas apenas comienza el dolor.</li><li>Ten un “kit” en la mochila: toallas o copa, analgésico, una bolsita térmica y agua.</li></ul></div></details>
+    <details class="acc"><summary><span class="ic" style="background:var(--blue)">${ic('cards')}</span>Estudiar con el periodo</summary><div class="body">
+      Tu capacidad de pensar no cambia con el ciclo: un gran análisis de más de 100 estudios no encontró diferencias reales en atención, memoria ni razonamiento entre fases. Lo que sí pesa son los síntomas: el dolor y el cansancio quitan concentración.
+      <ul><li>En días de dolor fuerte, bloques de 15 minutos y tareas más livianas.</li><li>Si ves que tu periodo coincide con un examen, ten el kit listo y duerme bien la víspera.</li><li>Si el dolor te hace faltar a clase, es válido hablar con tu profe o con bienestar universitario.</li></ul></div></details>
+    <details class="acc"><summary><span class="ic" style="background:var(--lil)">${ic('smile')}</span>Ánimo antes del periodo</summary><div class="body">
+      Muchas personas notan cambios de ánimo, irritabilidad o cansancio en los días previos. Si son tan fuertes que afectan tus estudios o relaciones, puede tratarse de algo que tiene tratamiento (como el trastorno disfórico premenstrual).
+      <ul><li>Registra a diario ánimo y síntomas durante al menos <b>dos ciclos</b>: así se diagnostica, y Maple te lo muestra en el calendario.</li><li>Lleva ese registro a consulta.</li></ul></div></details>
+    <details class="acc"><summary><span class="ic" style="background:var(--red)">${ic('call')}</span>Cuándo consultar</summary><div class="body">
+      <ul><li>Dolor que no mejora con calor ni analgésicos, o que te obliga a faltar o a quedarte en casa.</li><li>Sangrado muy abundante: cambiar toalla o tampón cada hora, o usar dos a la vez.</li><li>Periodo de más de 7 días, o sangrado entre periodos o después de relaciones.</li><li>Más de 3 meses sin periodo (sin estar embarazada).</li><li>Mareo, mucho cansancio o palidez con periodos abundantes.</li></ul>
+      <b>Dónde:</b> tu EPS (medicina general o ginecología), el servicio de salud de bienestar universitario, o Profamilia para salud sexual y reproductiva.<br><b>Urgencias:</b> dolor súbito e intenso, fiebre o sangrado con desmayo → servicio de urgencias.</div></details>`);
+  draw(); sheetOnClose = renderHoy;
+}
+$('#calmCycle').addEventListener('click', () => openCycle());
+
+
+/* ===================== bienvenida y perfil ===================== */
+$('#homeFeel').addEventListener('click', () => openFeel());
+function openWelcome() {
+  let i = 0;
+  const pages = [
+    () => `<div class="hero" style="margin-top:-4px"><div class="say" style="white-space:normal;width:84%;text-align:center">¡Hola! Soy Maple. Te acompaño a estudiar y a cuidarte.</div><div class="plat"></div><div class="mw" id="wMw"><img id="wImg" src="img/hq/wave.webp" alt="" style="height:150px"></div></div>
+      <label class="label" for="wName">¿Cómo te llamo?</label><input class="field" id="wName" maxlength="24" placeholder="Tu nombre o apodo (opcional)">`,
+    () => `<h2 class="sh-title" style="margin-bottom:12px">Así está organizada</h2>
+      <div class="tile" style="padding:4px 16px"><ul class="list">
+        <li>${ic('home', 'font-size:24px;color:var(--red)')}<span class="t"><b>Hoy</b><small>Lo que toca ahora, tu energía y tu meta</small></span></li>
+        <li>${ic('cards', 'font-size:24px;color:var(--blue)')}<span class="t"><b>Estudiar</b><small>Bloques de foco y tarjetas que vuelven cuando toca</small></span></li>
+        <li>${ic('flask', 'font-size:24px;color:var(--lil)')}<span class="t"><b>Lab</b><small>Calculadora y herramientas</small></span></li>
+        <li>${ic('user', 'font-size:24px;color:var(--mint)')}<span class="t"><b>Tú</b><small>Cómo estás, descansar, pedir ayuda y tu progreso</small></span></li></ul></div>`,
+    () => `<div class="portrait sm"><img src="img/hq/pe_risa.webp" alt=""></div><h2 class="sh-title center">¿Qué estás estudiando?</h2>
+      <p class="sub center" style="margin:6px 6px 12px">Escribe tus materias separadas por comas (puedes hacerlo después).</p>
+      <input class="field" id="wSubj" maxlength="160" placeholder="Ej.: Cálculo, Biología celular, Historia">
+      <button class="big-tile" id="wSci" style="margin-top:12px"><div class="ic" style="background:var(--lil)">${ic('flask')}</div><div><b>Estudio ciencias o ingeniería</b><small>Muestra las herramientas de química en Lab</small></div><span class="sw${S.sci !== false ? ' on' : ''}" id="wSciSw"></span></button>
+      <p class="sub center" style="margin:12px 6px 0;font-size:13px">Todo lo que anotes se queda en tu dispositivo y tu cuenta.</p>`];
+  const draw = () => {
+    $('#wBody').innerHTML = pages[i]();
+    $$('#wDots i').forEach((x, k) => x.classList.toggle('on', k <= i));
+    $('#wNext').textContent = i === pages.length - 1 ? '¡Empezar!' : 'Siguiente';
+    if (i === 0) { const m = new Maple($('#wMw'), $('#wImg')); m.wave(); $('#wName').value = S.name || ''; }
+    if (i === pages.length - 1) $('#wSci').onclick = () => { S.sci = S.sci === false; save(); $('#wSciSw').classList.toggle('on', S.sci); };
+  };
+  openSheet(`<div class="stepper" id="wDots"><i></i><i></i><i></i></div><div id="wBody"></div><div class="gap"></div><button class="btn" id="wNext">Siguiente</button>`);
+  $('#wNext').onclick = () => {
+    if (i === 0) { S.name = ($('#wName').value || '').trim().slice(0, 24); save(); }
+    if (i === pages.length - 1) { migrateDecks(); ($('#wSubj').value || '').split(',').map(x => x.trim()).filter(Boolean).slice(0, 12).forEach((n, k) => { if (!S.decks.some(d => d.name.toLowerCase() === n.toLowerCase())) S.decks.push({ id: 'k' + Date.now() + k, name: n.slice(0, 30) }); }); save(); }
+    if (i === pages.length - 1) { S.onboarded = true; save(); closeSheet(); renderHoy(); mHero.wave(); return; }
+    i++; draw();
+  };
+  sheetOnClose = () => { S.onboarded = true; save(); renderHoy(); };
+  draw();
+}
+$('#btnMe').addEventListener('click', () => {
+  openSheet(`<h2 class="sh-title" style="margin-bottom:12px">Tú</h2>
+    <label class="label" for="meName">Tu nombre</label><div class="row"><input class="field grow" id="meName" maxlength="24" placeholder="Opcional"><button class="btn sm" id="meSave">Guardar</button></div>
+    <div class="gap"></div><button class="big-tile" id="meCycle"><div class="ic" style="background:#E85A7E">${ic('flower')}</div><div><b>Registro de ciclo menstrual</b><small id="meCycleTxt"></small></div><span class="pill" id="meCycleP" style="margin-left:auto"></span></button>
+    <button class="big-tile" id="meProg"><div class="ic" style="background:var(--red)">${ic('star')}</div><div><b>Tu progreso y logros</b><small>Semana, consejos y logros</small></div>${ic('chev', 'margin-left:auto;color:#CFC8C0;font-size:22px')}</button>
+    <button class="big-tile" id="meTour"><div class="ic" style="background:var(--blue)">${ic('q')}</div><div><b>Ver la guía de nuevo</b><small>Cómo está organizada la app</small></div>${ic('chev', 'margin-left:auto;color:#CFC8C0;font-size:22px')}</button>
+    <button class="big-tile" id="meSci"><div class="ic" style="background:var(--mint)">${ic('brain')}</div><div><b>Por qué funciona</b><small>La investigación detrás de Maple</small></div>${ic('chev', 'margin-left:auto;color:#CFC8C0;font-size:22px')}</button>
+    <p class="foot" style="margin-top:6px">Tus datos se guardan en este dispositivo${cloud ? ' y en tu cuenta' : ''}. Nadie más los ve.</p>
+    <button class="link" id="meWipe" style="color:var(--red)">Borrar todos mis datos</button>`);
+  $('#meName').value = S.name || '';
+  const drawC = () => { const on = S.showCycle !== false; $('#meCycleTxt').textContent = on ? 'Visible en Bienestar' : 'Oculto'; $('#meCycleP').textContent = on ? 'Activo' : 'Apagado'; };
+  $('#meCycle').onclick = () => { S.showCycle = S.showCycle === false; save(); drawC(); renderCalma(); };
+  drawC();
+  $('#meSave').onclick = () => { S.name = $('#meName').value.trim().slice(0, 24); save(); renderHoy(); toast('Guardado'); };
+  $('#meTour').onclick = openWelcome;
+  $('#meProg').onclick = openProgress;
+  $('#meSci').onclick = () => $('#btnScience').click();
+  let armed = false;
+  $('#meWipe').onclick = () => { if (!armed) { armed = true; $('#meWipe').textContent = 'Toca otra vez para borrar todo'; return; } S = DEFAULT(); S.onboarded = true; save(); closeSheet(); renderAll(); toast('Datos borrados'); };
+});
+
+
+/* ===================== FEEDBACK: meta, logros y progreso ===================== */
+function coach(t) { const c = $('#coach'); if (!c) return; c.textContent = t; c.classList.add('on'); clearTimeout(coach._t); coach._t = setTimeout(() => c.classList.remove('on'), 5000); sfx('soft'); }
+const goal = () => S.goal || 60;
+function ringSVG(pct, color, label) {
+  return `<svg viewBox="0 0 100 100" style="transform:rotate(-90deg);width:100%;height:100%"><circle cx="50" cy="50" r="42" fill="none" stroke="var(--soft)" stroke-width="11"/><circle cx="50" cy="50" r="42" fill="none" stroke="${color}" stroke-width="11" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="${(263.9 * (1 - Math.min(1, pct))).toFixed(1)}" style="transition:stroke-dashoffset .8s cubic-bezier(.2,.9,.3,1)"/></svg><b>${label}</b>`;
+}
+function renderGoal() {
+  const d = today(), pct = d.min / goal();
+  $('#goalRing').innerHTML = ringSVG(pct, pct >= 1 ? 'var(--mint)' : 'var(--red)', Math.round(Math.min(1, pct) * 100) + '%');
+  $('#goalTxt').textContent = pct >= 1 ? '¡Meta de hoy cumplida!' : d.min ? `Llevas ${d.min} de ${goal()} min` : `Meta de hoy: ${goal()} min`;
+  const y = S.days[dayKey(new Date(Date.now() - 86400000))];
+  $('#goalSub').textContent = pct >= 1 ? 'Todo lo demás es extra. Descansa bien' : d.min ? `Te faltan ${goal() - d.min} min · toca para ver tu progreso` : (y && y.min ? `Ayer: ${y.min} min. Toca para ver tu progreso` : 'Toca para ver tu progreso');
+}
+function checkGoal() {
+  const d = today();
+  if (d.min >= goal() && !d.goalHit) { d.goalHit = true; save(); setTimeout(() => { confetti(); toast(`¡Cumpliste tu meta de ${goal()} min!`, 'risa'); mHero.celebrate(); }, 1400); }
+}
+const daysActive = () => Object.values(S.days).filter(d => d.min > 0 || d.cards > 0).length;
+const totalOf = k => Object.values(S.days).reduce((a, d) => a + (d[k] || 0), 0);
+const BADGES = [
+  ['first', 'timer', 'var(--red)', 'Primer bloque', () => totalOf('blocks') >= 1],
+  ['b10', 'star', 'var(--red)', '10 bloques', () => totalOf('blocks') >= 10],
+  ['h5', 'zap', 'var(--red)', '5 horas de foco', () => totalOf('min') >= 300],
+  ['c50', 'cards', 'var(--blue)', '50 tarjetas', () => totalOf('cards') >= 50],
+  ['own', 'pen', 'var(--blue)', 'Tu primera tarjeta', () => S.custom.length >= 1],
+  ['plan', 'cal', 'var(--lil)', 'Planeaste un examen', () => S.exams.length >= 1],
+  ['days3', 'sprout', 'var(--mint)', '3 días activos', () => daysActive() >= 3],
+  ['days7', 'leaf', 'var(--mint)', '7 días activos', () => daysActive() >= 7],
+  ['feel', 'smile', 'var(--yelD)', 'Nombraste una emoción', () => Object.values(S.days).some(d => (d.moods || []).length)],
+  ['night', 'moon', '#5B6CC9', 'Cerraste el día', () => !!S.tomorrow.day],
+  ['goal', 'target', 'var(--mint)', 'Meta diaria cumplida', () => Object.values(S.days).some(d => d.goalHit)],
+  ['why', 'heart', 'var(--pink)', 'Encontraste tu porqué', () => !!S.why],
+];
+const ICONS_B = { zap: 'bolt', cards: 'cards', pen: 'pen', cal: 'cal' };
+function checkBadges() {
+  S.badges = S.badges || {}; const fresh = BADGES.filter(([id, , , , ok]) => !S.badges[id] && ok());
+  if (!fresh.length) return;
+  fresh.forEach(([id]) => S.badges[id] = dayKey()); save();
+  fresh.forEach(([, , , name], k) => setTimeout(() => { toast('Logro nuevo: ' + name, 'risa'); sfx('ok'); }, 1800 + k * 2700));
+}
+function insights() {
+  const out = [], logs = Object.values(S.days).flatMap(d => d.log || []).filter(l => l.rate);
+  const by = {}; logs.forEach(l => { (by[l.dur] = by[l.dur] || []).push(l.rate); });
+  const durs = Object.entries(by).filter(([, v]) => v.length >= 2).map(([k, v]) => [k, v.reduce((a, b) => a + b, 0) / v.length]).sort((a, b) => b[1] - a[1]);
+  if (durs.length >= 2) out.push(['timer', 'var(--red)', `Te concentras mejor en bloques de <b>${durs[0][0]} min</b> (promedio ${durs[0][1].toFixed(1)} de 5).`]);
+  const slots = { mañana: [], tarde: [], noche: [] }; logs.forEach(l => slots[l.h < 12 ? 'mañana' : l.h < 19 ? 'tarde' : 'noche'].push(l.rate));
+  const best = Object.entries(slots).filter(([, v]) => v.length >= 2).map(([k, v]) => [k, v.reduce((a, b) => a + b, 0) / v.length]).sort((a, b) => b[1] - a[1]);
+  if (best.length >= 2) out.push(['sprout', 'var(--mint)', `Tu mejor momento para concentrarte parece ser la <b>${best[0][0]}</b>.`]);
+  const sl = Object.values(S.days).filter(d => d.sleep && (d.focus || []).length);
+  const low = sl.filter(d => d.sleep === '<6').flatMap(d => d.focus), ok = sl.filter(d => d.sleep === '7-9' || d.sleep === '9+').flatMap(d => d.focus);
+  if (low.length >= 2 && ok.length >= 2) { const a = low.reduce((x, y) => x + y, 0) / low.length, b = ok.reduce((x, y) => x + y, 0) / ok.length; if (b - a >= .4) out.push(['moon', '#5B6CC9', `Los días que duermes 7 h o más, tu concentración es más alta (${b.toFixed(1)} vs ${a.toFixed(1)}).`]); }
+  const dist = Object.values(S.days).flatMap(d => d.log || []); if (dist.length >= 4) { const avg = dist.reduce((a, l) => a + (l.dist || 0), 0) / dist.length; out.push(['cloud', 'var(--yelD)', avg <= 1 ? 'Te distraes poco durante los bloques. ¡El ritual funciona!' : `Te distraes unas ${avg.toFixed(1)} veces por bloque. Prueba alejar más el celular.`]); }
+  const [sn, sok] = S.calib[2]; if (sn >= 8) out.push(['target', 'var(--blue)', sok / sn >= .8 ? `Cuando dices “la sé”, aciertas el ${Math.round(100 * sok / sn)}%. Tu brújula es confiable.` : `Cuando dices “la sé”, aciertas el ${Math.round(100 * sok / sn)}%. Vale la pena dudar un poco más de lo que “te suena”.`]);
+  return out;
+}
+function openProgress() {
+  const now = new Date(), days = [];
+  for (let i = 6; i >= 0; i--) { const dt = new Date(now); dt.setDate(now.getDate() - i); days.push([dt, S.days[dayKey(dt)] || {}]); }
+  const mx = Math.max(goal(), ...days.map(([, d]) => d.min || 0)), L = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+  const wkMin = days.reduce((a, [, d]) => a + (d.min || 0), 0), wkCards = days.reduce((a, [, d]) => a + (d.cards || 0), 0);
+  const moods = days.flatMap(([, d]) => d.moods || []); const mc = {}; moods.forEach(m => mc[m.e] = (mc[m.e] || 0) + 1);
+  const ins = insights();
+  S.badges = S.badges || {};
+  openSheet(`<h2 class="sh-title">Tu progreso</h2><p class="sub" style="margin:0 0 14px">${wkMin ? `Esta semana: <b>${wkMin} min</b> de foco y <b>${wkCards}</b> tarjetas.` : 'Aquí verás tu semana cuando empieces a estudiar.'}</p>
+    <div class="tile"><div class="label">Minutos por día</div><div class="bars">${days.map(([dt, d]) => `<div><b>${d.min || ''}</b><i style="height:${Math.round(4 + 80 * (d.min || 0) / mx)}%;${(d.min || 0) >= goal() ? 'background:var(--mint)' : ''}"></i>${L[dt.getDay()]}</div>`).join('')}</div>
+      <div class="gap"></div><div class="row"><span class="sub grow" style="font-size:13px">Meta diaria</span><div class="seg" id="goalSeg" style="width:220px"></div></div></div>
+    ${moods.length ? `<div class="gap"></div><div class="label">Cómo te sentiste esta semana</div><div class="chips wrapc" style="padding-top:0">${Object.entries(mc).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<span class="pill"><img src="img/hq/pe_${EMOS[k].pe}.webp" alt="" style="width:22px;height:22px;border-radius:50%">${EMOS[k].label} · ${n}</span>`).join('')}</div>` : ''}
+    <div class="gap"></div><div class="label">Lo que Maple ha notado</div>
+    ${ins.length ? ins.map(([icn, col, t]) => `<div class="insight"><div class="ic" style="background:${col}">${ic(icn)}</div><div>${t}</div></div>`).join('') : '<div class="insight"><div class="ic" style="background:var(--soft);color:var(--ink2)">' + ic('q') + '</div><div>Cuando califiques tu concentración en varios bloques, aquí aparecerán consejos hechos para ti.</div></div>'}
+    <div class="gap"></div><div class="label">Logros · ${Object.keys(S.badges).length} de ${BADGES.length}</div>
+    <div class="badges">${BADGES.map(([id, icn, col, name]) => `<div class="badge-c ${S.badges[id] ? '' : 'off'}"><div class="ic" style="background:${col}">${ic(ICONS_B[icn] || icn)}</div>${name}</div>`).join('')}</div>`);
+  const gs = $('#goalSeg'); [30, 60, 90, 120].forEach(g => gs.append(el('button', { class: goal() === g ? 'on' : '', style: 'height:36px;font-size:14px', onclick: () => { S.goal = g; save(); openProgress(); renderHoy(); } }, g + '')));
+  sheetOnClose = renderHoy;
+}
+$('#goalBtn').addEventListener('click', openProgress);
+
+/* ===================== hojas y ciencia ===================== */
+let sheetOnClose = null;
+function openSheet(html) { if (sheetOnClose) { const f = sheetOnClose; sheetOnClose = null; f(); } $('#sheetBody').innerHTML = `<button class="sheet-x" aria-label="Cerrar">${ic('x')}</button>` + html; $('#sheetBody .sheet-x').onclick = closeSheet; $('#sheetBg').classList.add('on'); const sh = $('.sheet'); sh.scrollTop = 0; sh.style.transform = ''; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#sheetBg').classList.contains('on')) closeSheet(); });
+(() => { // deslizar hacia abajo para cerrar
+  const sh = $('.sheet'); let y0 = null, dy = 0;
+  sh.addEventListener('touchstart', e => { if (sh.scrollTop > 0 || e.target.closest('input,textarea,.cal')) { y0 = null; return; } y0 = e.touches[0].clientY; dy = 0; sh.classList.add('drag'); }, { passive: true });
+  sh.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = dy ? `translateY(${dy}px)` : ''; }, { passive: true });
+  sh.addEventListener('touchend', () => { if (y0 == null) return; sh.classList.remove('drag'); sh.style.transition = 'transform .25s'; if (dy > 110) closeSheet(); sh.style.transform = ''; setTimeout(() => sh.style.transition = '', 260); y0 = null; });
+})();
+function closeSheet() { $('#sheetBg').classList.remove('on'); if (sheetOnClose) { const f = sheetOnClose; sheetOnClose = null; f(); } }
+$('#sheetBg').addEventListener('click', e => { if (e.target.id === 'sheetBg') closeSheet(); });
+const SCIENCE = [
+  ['Estudiar', 'Recordar y espaciar', 'Autoevaluarse y repartir el estudio en el tiempo son de las técnicas más útiles; releer y subrayar, de las menos. Por eso las tarjetas te piden responder antes de voltear, y el plan de exámenes reparte repasos en varios días.', 'Dunlosky et al., 2013', 'https://www.psychologicalscience.org/news/releases/which-study-strategies-make-the-grade.html'],
+  ['Estudiar', 'Saber lo que sabes', 'Los estudiantes suelen sobreestimar lo que saben, sobre todo quienes tienen notas más bajas. Comparar tu seguridad con tus aciertos y recibir retroalimentación mejora esa brújula.', 'Miller y Geraci, 2011; Hacker et al.', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10607382'],
+  ['Estudiar', 'Enseñar para aprender', 'Prepararse para enseñar ayuda a corto plazo; explicar de verdad a otro, a largo plazo.', 'Fiorella y Mayer, 2013', 'https://www.sec-ed.co.uk/best-practice/research-based-teaching-approaches/'],
+  ['Estudiar', 'Ejemplos resueltos y autoexplicación', 'En un curso universitario de ciencias, estudiar con ejemplos resueltos y preguntas para autoexplicarse mejoró el desempeño.', 'Crippen y Earl, 2004', 'https://mail.editlib.org/p/12876'],
+  ['Concentrarse', 'Descansos programados', 'Con descansos fijos (tipo Pomodoro), estudiantes reportaron más concentración y motivación, y menos fatiga.', 'Biwer et al., 2023', 'https://pubmed.ncbi.nlm.nih.gov/36859717/'],
+  ['Concentrarse', 'Moverse en el descanso', 'Una sola sesión de ejercicio mejora la cognición con un efecto pequeño a moderado.', 'Chang et al., 2025 · metarrevisión', 'https://scholar.lib.ntnu.edu.tw/en/publications/effects-of-acute-exercise-on-cognitive-function-a-meta-review-of-/'],
+  ['Concentrarse', 'Descanso sin celular', 'Quienes descansaron con el celular rindieron después como si no hubieran descansado.', 'Kang y Kurtzberg, 2019', 'https://www.sciencedaily.com/releases/2019/08/190819132130.htm'],
+  ['Dormir', 'El sueño cuenta en las notas', 'En universitarios de primer año, cada hora menos de sueño nocturno se asoció con un promedio más bajo al final del semestre.', 'Creswell et al., 2023 · PNAS', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9974458'],
+  ['Dormir', 'Lista de mañana antes de dormir', 'Escribir una lista concreta de pendientes antes de acostarse ayudó a dormirse más rápido que escribir lo ya hecho.', 'Scullin et al., 2018', 'https://news.web.baylor.edu/news/story/2018/can-writing-your-dos-help-you-doze-baylor-study-suggests-jotting-down-tasks-can'],
+  ['Sentirse bien', 'Nervios a favor', 'Reinterpretar la activación del estrés como algo útil mejoró el rendimiento y bajó la ansiedad en exámenes de matemáticas.', 'Jamieson et al., 2010 y 2022', 'https://epic.tc.columbia.edu/research/academic-alert/blog-posts/2023/can-stress-actually-be-beneficial-to-achievement/'],
+  ['Sentirse bien', 'Escribir la preocupación', '10 minutos escribiendo sobre los miedos antes de un examen ayudaron a los más ansiosos a rendir como los demás.', 'Ramirez y Beilock, 2011', 'https://news.uchicago.edu/story/writing-about-worries-eases-anxiety-and-improves-test-performance'],
+  ['Sentirse bien', 'Encontrar el porqué', 'Escribir sobre la relevancia personal de un curso de ciencias mejoró el interés y las notas, sobre todo de quienes dudaban de sí mismos.', 'Hulleman y Harackiewicz, 2009; Harackiewicz et al., 2016', 'https://openlab.citytech.cuny.edu/fyw/files/2021/03/UtilityValueIntervention.pdf'],
+  ['Sentirse bien', 'Pertenencia', 'Saber que las dudas sobre “encajar” son comunes y pasajeras mejoró las notas y la salud de estudiantes de grupos minoritarios.', 'Walton y Cohen, 2011', 'https://sparq.stanford.edu/solutions/when-students-feel-they-belong-they-thrive'],
+  ['Sentirse bien', 'Perdonarse y respirar', 'Perdonarse por postergar se asoció con postergar menos después; el suspiro cíclico mejoró el ánimo más que la meditación.', 'Wohl et al., 2010; Balban et al., 2023', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9873947'],
+  ['Emociones', 'Ponerle nombre', 'Etiquetar con palabras lo que sientes (“esto es enojo”) redujo la respuesta de la amígdala en un estudio de neuroimagen.', 'Lieberman et al., 2007', 'https://www.sciencedaily.com/releases/2007/06/070622090727.htm'],
+  ['Emociones', 'Desahogarse no enfría el enojo', 'Golpear un saco pensando en quien te enojó aumentó el enojo y la agresión; no hacer nada funcionó mejor.', 'Bushman, 2002', 'https://public.websites.umich.edu/~bbushman/PSPB02.pdf'],
+  ['Salud femenina', 'El dolor menstrual pesa en los estudios', 'Unas 7 de cada 10 jóvenes tienen dolor menstrual; 1 de cada 5 ha faltado a clase por él y 4 de cada 10 dicen que afecta su concentración.', 'Armour et al., 2019 · metaanálisis', 'https://katalog.lib.cas.cz/KNAV/EdsRecord/edb,138059488'],
+  ['Salud femenina', 'Calor y ejercicio para el dolor', 'En una revisión, el ejercicio y el calor redujeron el dolor menstrual, incluso más que los analgésicos en algunos estudios.', 'Armour et al., 2019; Yuan et al., 2026', 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6337810'],
+  ['Salud femenina', 'El ciclo no cambia cómo piensas', 'Un metaanálisis de 102 estudios no encontró diferencias robustas en atención, memoria ni razonamiento entre fases del ciclo.', 'Jang et al., 2025 · PLOS ONE', 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11913300/'],
+  ['Salud femenina', 'Registrar para entender el ánimo', 'El trastorno disfórico premenstrual se diagnostica registrando los síntomas a diario durante al menos dos ciclos.', 'IAPMD', 'https://iapmd.org/about-pmdd'],
+  ['Contexto', 'Universitarios en Colombia', 'Un estudio nacional reciente encontró síntomas moderados o severos de ansiedad en cerca del 43% de los universitarios; dormir poco se asocia con más ansiedad.', 'Alianza 4U, 2025 (vía EAFIT)', 'https://repository.eafit.edu.co/bitstreams/b7927827-5f39-459d-b40b-4f09cba7bc51/download'],
+];
+$('#btnScience').addEventListener('click', () => {
+  let cur = '';
+  openSheet(`<h2 class="sh-title">Por qué funciona</h2><p class="sub" style="margin:0 0 16px">Cada parte de Maple se basa en investigación sobre cómo aprenden y se sienten los estudiantes.</p>` +
+    SCIENCE.map(([g, t, d, s, u]) => (g !== cur ? `<div class="label" style="margin-top:6px">${cur = g}</div>` : '') + `<div class="tile sci"><h3>${t}</h3><p>${d}</p><a href="${u}" target="_blank" rel="noopener">${s} ↗</a></div>`).join('') +
+    `<p class="foot">Maple acompaña, pero no reemplaza a un profesional. Tu progreso se guarda en este dispositivo${cloud ? ' y en tu cuenta' : ''}.</p>`);
+});
+
+/* ===================== arranque ===================== */
+function renderAll() { migrateDecks(); renderHoy(); renderPlan(); renderRepHome(); renderCalma(); }
+applyEnergy(); renderAll(); resumeRun();
+if (!S.onboarded && !S.run) setTimeout(openWelcome, 500);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.run && S.run.kind === 'focus' && !S.run.paused && remaining() <= 0) finishFocus(true); });
+</script>
+<script src="js/chem.js"></script>
+<script src="js/data.js"></script>
+<script src="js/extra.js"></script>
+<script src="js/simple.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/dev.js"></script>
+</body>
+</html>
